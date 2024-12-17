@@ -20,3 +20,4 @@ class Paciente(Base):
     
     #pessoa = relationship("Pessoa", back_populates="paciente")
     #consultas = relationship("Consulta", back_populates="paciente")
+    #a
