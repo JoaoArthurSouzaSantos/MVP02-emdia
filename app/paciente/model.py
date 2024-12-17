@@ -2,7 +2,7 @@ from sqlalchemy import Column, String , Date
 from sqlalchemy.orm import relationship
 from shared.database import Base
 
-class Paciente(Base):
+class PacienteModel(Base):
     __tablename__ = "pacientes"
 
     nome = Column(String(255))
@@ -15,7 +15,7 @@ class Paciente(Base):
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     
-    estratificacao = relationship("Estratificacao", back_populates="paciente")
+    estratificacao = relationship("EstratificacaoModel", back_populates="paciente")
     retornos = relationship("Retornos", back_populates="paciente")
     
     #pessoa = relationship("Pessoa", back_populates="paciente")

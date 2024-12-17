@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String ,ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from db.base import Base
 
@@ -13,4 +13,3 @@ class FuncionarioModel(Base):
     idPerfil = Column(int, ForeignKey("perfis.id"), nullable=False, index=True)
 
     perfil = relationship("PerfilModel", back_populates="funcionarios")
-
