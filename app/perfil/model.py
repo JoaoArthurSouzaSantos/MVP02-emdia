@@ -11,4 +11,4 @@ class PerfilModel(Base):
 
     funcionarios = relationship("FuncionarioModel", back_populates="perfil")
     permissoes = relationship("PerfilPermissaoModel", back_populates="perfil", cascade="all, delete-orphan")
-    medico = relationship("MedicoModel", back_populates="perfil")
+
