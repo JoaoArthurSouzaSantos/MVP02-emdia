@@ -9,4 +9,3 @@ class EspecialidadeModel(Base):
     nome = Column(String(255), unique=True, nullable=False)
 
    
-    medicos = relationship("MedicoModel", back_populates="especialidade")
