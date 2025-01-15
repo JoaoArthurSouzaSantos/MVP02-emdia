@@ -11,7 +11,5 @@ class ProntuarioModel(Base):
     descricao = Column(String(500), nullable=False)
     exame_id = Column(Integer, ForeignKey("exames.id"), nullable=True)
 
-    # Relacionamentos
-    medico = relationship("MedicoModel", back_populates="prontuarios")
     paciente = relationship("PacienteModel", back_populates="prontuarios")
     exame = relationship("ExameModel")

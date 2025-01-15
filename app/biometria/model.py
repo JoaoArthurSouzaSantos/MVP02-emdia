@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Date, Float
+from sqlalchemy import Column, Date, Float, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from shared.database import Base
+from db.base import Base
 
-class Paciente(Base):
+class BiometriaModel(Base):
     __tablename__ = "biometrias"
 
-    imc = Column(Float)
-    peso = Column(Float)
-    altura = Column(Float)
-    data = Column(Date)
-    cintura = Column(Float)
-    
-    paciente = relationship("paciente", back_populates="biometrias")
+    id = Column(Integer, primary_key=True, index=True)
+    imc = Column(Float, nullable=False)
+    peso = Column(Float, nullable=False)
+    altura = Column(Float, nullable=False)
+    data = Column(Date, nullable=False)
+    cintura = Column(Float, nullable=False)
+    paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
+
+    paciente = relationship("PacienteModel", back_populates="biometrias")
