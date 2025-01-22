@@ -1,14 +1,14 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from db.connection import SessionLocal
+from db.connection import Session
 from funcionario.auth_funcionario import FuncionarioUseCases
 
 oauth_scheme = OAuth2PasswordBearer(tokenUrl='/funcionario/login')
 
 def get_db_session():
     try:
-        session = SessionLocal()
+        session = Session()
         yield session
     finally:
         session.close()

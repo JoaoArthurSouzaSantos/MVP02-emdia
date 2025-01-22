@@ -10,7 +10,7 @@ from .models import FuncionarioModel
 from .schemas import FuncionarioSchema, FuncionarioLogin
 
 
-SECRET_KEY = config('SECRET_KEY')
+Session = config('Session')
 ALGORITHM = config('ALGORITHM')
 
 crypt_context = CryptContext(schemes=['sha256_crypt'])
