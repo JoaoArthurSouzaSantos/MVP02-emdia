@@ -10,5 +10,6 @@ class PermissaoModel(Base):
     name = Column(String(255), unique=True, nullable=False, index=True)
 
     perfis = relationship("PerfilPermissaoModel", back_populates="permissao", cascade="all, delete-orphan")
+    perfis_rel = relationship("PerfilModel", secondary="perfilpermissoes", back_populates="permissoes_rel")
 
 

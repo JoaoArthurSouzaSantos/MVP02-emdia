@@ -8,4 +8,6 @@ class EspecialidadeModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), unique=True, nullable=False)
 
-   
+    
+    funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="especialidade")
+    retornos = relationship("RetornosModel", back_populates="especialidade", cascade="all, delete-orphan")

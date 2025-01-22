@@ -26,7 +26,7 @@ def get_paciente_pessoa_consulta(numeroSUS: str, db: Session = Depends(get_db_se
     if paciente_pessoa_consulta is None:
         raise HTTPException(status_code=404, detail="Paciente, Pessoa ou Consulta não encontrados")
 
-    # Montar o retorno no formato solicitado
+
     resultado = {
         "paciente": {
             "numeroSUS": paciente_pessoa_consulta.numeroSUS,

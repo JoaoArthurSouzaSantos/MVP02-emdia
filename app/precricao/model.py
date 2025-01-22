@@ -1,14 +1,21 @@
-from sqlalchemy import Column, Integer, ForeignKey, String
+from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from db.base import Base
 
-class PrescricaoModel(Base):
+class Prescricao(Base):
     __tablename__ = "prescricoes"
 
     id = Column(Integer, primary_key=True, index=True)
-    paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
-    medico_crm = Column(String(20), ForeignKey("medicos.crm"), nullable=False)
-    medicamento = Column(String(255), nullable=False)
-    dosagem = Column(String(255), nullable=False)
+    inicio = Column(Date, nullable=False)  
+    fim = Column(Date, nullable=True)  
+    status = Column(String(255), nullable=False)  
+    frequencia = Column(String(255), nullable=False)  
+    dosagem = Column(String(255), nullable=False)  
 
-    paciente = relationship("PacienteModel", back_populates="prescricoes")
+    # Chaves estrangeiras
+    fk_medicamento = Column(Integer, ForeignKey("medicamentos.id"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
+
+    # Relacionamentos
+    paciente = relationship("Paciente", back_populates="prescricoes")
+    medicamento = relationship("Medicamento", back_populates="prescricoes")
