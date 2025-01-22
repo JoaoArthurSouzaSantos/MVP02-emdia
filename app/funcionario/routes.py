@@ -27,7 +27,7 @@ def funcionario_register(
 
 
 @funcionario_router.post('/login')
-def funcionario_register(
+def funcionario_login(
     request_form_funcionario: OAuth2PasswordRequestForm = Depends(),
     db_session: Session = Depends(get_db_session),
 ):
@@ -110,8 +110,3 @@ def excluir_funcionario(
             detail="Error deleting funcionario"
         )
 
-
-
-@test_router.get('/test')
-def test_user_verify():
-    return 'It works'

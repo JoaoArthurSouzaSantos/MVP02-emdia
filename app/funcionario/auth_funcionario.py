@@ -7,7 +7,7 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from decouple import config
 from .models import FuncionarioModel
-from .schemas import FuncionarioSchema
+from .schemas import FuncionarioSchema, FuncionarioLogin
 
 
 SECRET_KEY = config('SECRET_KEY')
@@ -37,7 +37,7 @@ class FuncionarioUseCases:
                 detail='Funcionario already exists'
             )
 
-    def funcionario_login(self, funcionario: FuncionarioSchema, expires_in: int = 30):
+    def funcionario_login(self, funcionario: FuncionarioLogin, expires_in: int = 30):
         funcionario_on_db = self.db_session.query(FuncionarioModel).filter_by(username=funcionario.username).first()
 
         if funcionario_on_db is None:
