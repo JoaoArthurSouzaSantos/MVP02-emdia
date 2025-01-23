@@ -9,7 +9,6 @@ from decouple import config
 from .models import FuncionarioModel
 from .schemas import FuncionarioSchema
 
-
 SECRET_KEY = config('SECRET_KEY')
 ALGORITHM = config('ALGORITHM')
 
