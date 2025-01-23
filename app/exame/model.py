@@ -9,4 +9,5 @@ class ExameModel(Base):
     nome = Column(String(255), nullable=False)
     resultado = Column(String(500), nullable=True)
     data_realizacao = Column(String(50), nullable=False)
+    
     prescricao = relationship("PrescricaoModel", back_populates="exames")

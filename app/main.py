@@ -1,35 +1,66 @@
 from fastapi import FastAPI
+<<<<<<< HEAD
 from paciente.routes import paciente_router
 from funcionario.routes import funcionario_router
 from funcionario.routes import test_router
 from biometria.routes import biometria_router
 from consulta.routers import router as consulta_router
+=======
+>>>>>>> 349e6a9cfb735b1b5413f13466359a147e8aa015
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from funcionario.routes import funcionario_router, test_router
+from medicamento.routes import medicamento_router
+from prescricao.routes import prescricao_router
+from pacientepatologia.routes import pacientepatologia_router
+from patologia.routes import patologia_router
+from consulta.routers import router as consulta_router
+from prontuario.routes import prontuario_router
+from especialidade.routes import especialidade_router
+from perfilpermissao.routes import perfilpermissao_router
+from estratificacao.routes import estratificacao_router
+from findrisk.routes import findrisk_router
+from perfil.routes import perfil_router
+from retornos.routes import retornos_router
+from biometria.routes import biometria_router
+from exame.routes import exame_router
 
 app = FastAPI()
 
 # Incluir as rotas relacionadas ao usuário
 app.include_router(funcionario_router, prefix="/funcionario", tags=["funcionarios"])
 app.include_router(paciente_router, prefix="/paciente", tags=["pacientes"])
+<<<<<<< HEAD
 app.include_router(consulta_router, prefix="/consulta", tags=["consulta"])
 app.include_router(biometria_router, prefix="/biometria", tags=["biometria"])
+=======
+app.include_router(consulta_router, prefix="/consulta", tags=["consultas"])
+>>>>>>> 349e6a9cfb735b1b5413f13466359a147e8aa015
 app.include_router(test_router)
-
-
-
+app.include_router(medicamento_router, prefix="/medicamento", tags=["medicamentos"])
+app.include_router(prescricao_router, prefix="/prescricao", tags=["prescricoes"])
+app.include_router(pacientepatologia_router, prefix="/pacientepatologia", tags=["pacientepatologias"])
+app.include_router(patologia_router, prefix="/patologia", tags=["patologias"])
+app.include_router(prontuario_router, prefix="/prontuario", tags=["prontuarios"])
+app.include_router(especialidade_router, prefix="/especialidade", tags=["especialidades"])
+app.include_router(perfilpermissao_router, prefix="/perfilpermissao", tags=["perfilpermissoes"])
+app.include_router(estratificacao_router, prefix="/estratificacao", tags=["estratificacoes"])
+app.include_router(findrisk_router, prefix="/findrisk", tags=["findrisk"])
+app.include_router(perfil_router, prefix="/perfil", tags=["perfis"])
+app.include_router(retornos_router, prefix="/retornos", tags=["retornos"])
+app.include_router(biometria_router, prefix="/biometria", tags=["biometrias"])
+app.include_router(exame_router, prefix="/exame", tags=["exames"])
 
 @app.get("/openapi.json")
 async def get_open_api_endpoint():
     return JSONResponse(get_openapi(title="Your Project Name", version="1.0", routes=app.routes))
 
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permitir solicitações de todas as origens
+    allow_origins=["*"], 
     allow_credentials=True,
-    allow_methods=["*"],  # Permitir todos os métodos HTTP
-    allow_headers=["*"],  # Permitir todos os cabeçalhos
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )

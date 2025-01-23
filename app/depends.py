@@ -4,9 +4,7 @@ from sqlalchemy.orm import Session
 from db.connection import Session
 from funcionario.auth_funcionario import FuncionarioUseCases
 
-
 oauth_scheme = OAuth2PasswordBearer(tokenUrl='/funcionario/login')
-
 
 def get_db_session():
     try:
@@ -14,7 +12,6 @@ def get_db_session():
         yield session
     finally:
         session.close()
-
 
 def token_verifier(
     db_session: Session = Depends(get_db_session),
