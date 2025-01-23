@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from paciente.routers import router as paciente_router
-from pessoa.routers import router as pessoa_router
+from paciente.routes import paciente_router
 from funcionario.routes import funcionario_router
 from funcionario.routes import test_router
+from biometria.routes import biometria_router
 from consulta.routers import router as consulta_router
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
@@ -14,8 +14,8 @@ app = FastAPI()
 # Incluir as rotas relacionadas ao usuário
 app.include_router(funcionario_router, prefix="/funcionario", tags=["funcionarios"])
 app.include_router(paciente_router, prefix="/paciente", tags=["pacientes"])
-app.include_router(pessoa_router, prefix="/pessoa_router", tags=["pessoa_router"])
-app.include_router(consulta_router, prefix="/consulta_router", tags=["consulta_router"])
+app.include_router(consulta_router, prefix="/consulta", tags=["consulta"])
+app.include_router(biometria_router, prefix="/biometria", tags=["biometria"])
 app.include_router(test_router)
 
 
