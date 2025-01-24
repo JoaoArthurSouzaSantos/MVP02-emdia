@@ -9,6 +9,7 @@ from db.base import Base
 #Models
 from paciente.models import PacienteModel
 from biometria.model import BiometriaModel
+from findrisk.model import FindriskModel
 
 from alembic import context
 
