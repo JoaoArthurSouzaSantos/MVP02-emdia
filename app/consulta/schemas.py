@@ -67,38 +67,6 @@ class ConsultaFuncionarioId(BaseModel):
     class Config:
         orm_mode = True
 
-
-
-class ConsultaPacientePessoaOut(BaseModel):
-    id: int
-    idPaciente: str
-    idFuncionario: str
-    data: date
-    dataRetorno: date
-    hbg: Optional[float] = None
-    tomaMedHipertensao: Optional[str] = None
-    praticaAtivFisica: Optional[str] = None
-    imc: Optional[float] = None
-    peso: Optional[float] = None
-    historicoAcucarElevado: Optional[str] = None
-    altura: Optional[float] = None
-    cintura: Optional[float] = None
-    resultadoFindRisc: Optional[str] = None
-    frequenciaIngestaoVegetaisFrutas: Optional[str] = None
-    historicoFamiliar: Optional[str] = None
-    medico: Optional[str] = None
-    
-    numeroSUS: str
-    data_nascimento: date
-    sexo: str
-    info: str
-    cpf: str
-    nome: str
-    email: str
-
-    class Config:
-        orm_mode = True
-
 class EvolucaoHB(BaseModel):
     data: date
     hbg: Optional[float] = None
