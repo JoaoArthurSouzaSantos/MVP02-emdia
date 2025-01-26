@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import ProntuarioExameSchema
-from .model import ProntuarioExame
+from db.models import ProntuarioExame
 from depends import get_db_session
 
 prontuario_router = APIRouter()

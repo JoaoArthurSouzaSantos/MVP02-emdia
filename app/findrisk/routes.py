@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import FindriskSchema
-from .model import FindriskModel
+from db.models import FindriskModel
 from depends import get_db_session
 
 findrisk_router = APIRouter()

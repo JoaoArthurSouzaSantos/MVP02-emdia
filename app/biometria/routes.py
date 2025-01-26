@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import BiometriaSchema
-from .model import BiometriaModel
+from db.models import BiometriaModel
 from depends import get_db_session
 
 biometria_router = APIRouter()

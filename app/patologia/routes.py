@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import PatologiaSchema
-from .model import PatologiaModel
+from db.models import PatologiaModel
 from depends import get_db_session
 
 patologia_router = APIRouter()

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .model import RetornosModel
+from db.models import RetornosModel
 from .schemas import RetornosSchema
 from depends import get_db_session
 

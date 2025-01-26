@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import PerfilPermissaoSchema
-from .model import PerfilPermissaoModel
+from db.models import PerfilPermissaoModel
 from depends import get_db_session
 
 perfilpermissao_router = APIRouter()

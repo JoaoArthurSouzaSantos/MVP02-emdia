@@ -1,25 +1,17 @@
-import re
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 
 
-class FuncionarioSchema(BaseModel):
-    username: str
-    password: str
-    id: str
+class FuncionarioBase(BaseModel):
+    cpf: str
+    nome: str
+    email: str
+    idPerfil: int
 
-    @validator('username')
-    def validate_username(cls, value):
-        if not re.match('^([a-z]|[0-9]|@)+$', value):
-            raise ValueError('Username format invalid')
-        return value
 
-class FuncionarioLogin(BaseModel):
-    username: str
+class FuncionarioCreate(FuncionarioBase):
     password: str
 
-    @validator('username')
-    def validate_username(cls, value):
-        if not re.match('^([a-z]|[0-9]|@)+$', value):
-            raise ValueError('Username format invalid')
-        return value
 
+class FuncionarioOut(FuncionarioBase):
+    id: int
+    password: str

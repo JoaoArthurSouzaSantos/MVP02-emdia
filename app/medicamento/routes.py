@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .model import Medicamento
+from db.models import MedicamentoModel
 from .schemas import MedicamentoSchema
 from depends import get_db_session
 
@@ -9,7 +9,7 @@ medicamento_router = APIRouter()
 
 @medicamento_router.post('/medicamento', response_model=MedicamentoSchema)
 def create_medicamento(medicamento: MedicamentoSchema, db_session: Session = Depends(get_db_session)):
-    medicamento_model = Medicamento(**medicamento.dict())
+    medicamento_model = MedicamentoModel(**medicamento.dict())
     db_session.add(medicamento_model)
     db_session.commit()
     db_session.refresh(medicamento_model)
@@ -17,14 +17,14 @@ def create_medicamento(medicamento: MedicamentoSchema, db_session: Session = Dep
 
 @medicamento_router.get('/medicamento/{id}', response_model=MedicamentoSchema)
 def get_medicamento(id: int, db_session: Session = Depends(get_db_session)):
-    medicamento_model = db_session.query(Medicamento).filter(Medicamento.id == id).first()
+    medicamento_model = db_session.query(MedicamentoModel).filter(MedicamentoModel.id == id).first()
     if not medicamento_model:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Medicamento not found")
     return medicamento_model
 
 @medicamento_router.put('/medicamento/{id}', response_model=MedicamentoSchema)
 def update_medicamento(id: int, medicamento: MedicamentoSchema, db_session: Session = Depends(get_db_session)):
-    medicamento_model = db_session.query(Medicamento).filter(Medicamento.id == id).first()
+    medicamento_model = db_session.query(MedicamentoModel).filter(MedicamentoModel.id == id).first()
     if not medicamento_model:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Medicamento not found")
     
@@ -37,7 +37,7 @@ def update_medicamento(id: int, medicamento: MedicamentoSchema, db_session: Sess
 
 @medicamento_router.delete('/medicamento/{id}')
 def delete_medicamento(id: int, db_session: Session = Depends(get_db_session)):
-    medicamento_model = db_session.query(Medicamento).filter(Medicamento.id == id).first()
+    medicamento_model = db_session.query(MedicamentoModel).filter(MedicamentoModel.id == id).first()
     if not medicamento_model:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Medicamento not found")
     

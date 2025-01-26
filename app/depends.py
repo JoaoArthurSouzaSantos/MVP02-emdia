@@ -1,21 +1,10 @@
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-from db.connection import Session
-from funcionario.auth_funcionario import FuncionarioUseCases
-
-oauth_scheme = OAuth2PasswordBearer(tokenUrl='/funcionario/login')
+from db.connection import Session as SessionLocal
+from decouple import config
 
 def get_db_session():
+    db = SessionLocal()
     try:
-        session = Session()
-        yield session
+        yield db
     finally:
-        session.close()
+        db.close()
 
-def token_verifier(
-    db_session: Session = Depends(get_db_session),
-    token = Depends(oauth_scheme)
-):
-    uc = FuncionarioUseCases(db_session=db_session)
-    uc.verify_token(access_token=token)
