@@ -1,5 +1,6 @@
 from db.base import Base  # Corrigir o caminho da importação
 from logging.config import fileConfig
+
 from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import engine_from_config
