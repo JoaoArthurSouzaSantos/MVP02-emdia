@@ -3,7 +3,7 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from decouple import config
-
+from scheduler.notification_scheduler import NotificationScheduler
 from funcionario.routes import funcionario_router, test_router
 from medicamento.routes import medicamento_router
 from pacientepatologia.routes import pacientepatologia_router
@@ -53,3 +53,6 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"], 
 )
+
+scheduler = NotificationScheduler()
+scheduler.start()
