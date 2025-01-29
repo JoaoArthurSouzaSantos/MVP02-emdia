@@ -8,7 +8,7 @@ from app.db.models import (
     RetornosModel, MedicamentoModel
 )
 from datetime import date
-from app.funcionario.auth_funcionario import crypt_context
+from app.funcionario.auth import crypt_context
 
 def seed_data(db: Session):
     # Create profiles
@@ -36,12 +36,12 @@ def seed_data(db: Session):
     patient1 = PacienteModel(
         numeroSUS=123456789, dataNascimento=date(1990, 1, 1), sexo="M", 
         info="Info1", telefone="123456789", email="paciente1@exemplo.com", 
-        nome="Paciente Um", microRegiao="Região1"
+        nome="João Arthur Souza Santos", microRegiao="Região1"
     )
     patient2 = PacienteModel(
         numeroSUS=987654321, dataNascimento=date(1985, 5, 5), sexo="F", 
         info="Info2", telefone="987654321", email="paciente2@exemplo.com", 
-        nome="Paciente Dois", microRegiao="Região2"
+        nome="Alyson Steve Lacerda", microRegiao="Região2"
     )
     db.add_all([patient1, patient2])
     db.commit()
