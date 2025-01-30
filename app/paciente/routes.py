@@ -13,18 +13,22 @@ def create_paciente(paciente: schemas.PacienteCreate, db: Session = Depends(get_
     db.add(db_paciente)
     db.commit()
     db.refresh(db_paciente)
+    HTTPException(200)
     return db_paciente
 
 @paciente_router.get("/pacientes/", response_model=List[schemas.Paciente])
 def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db_session)):
     pacientes = db.query(models.PacienteModel).offset(skip).limit(limit).all()
+    HTTPException(200)
     return pacientes
 
 @paciente_router.get("/pacientes/{numeroSUS}", response_model=schemas.Paciente)
 def read_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
+    int(numeroSUS)
     paciente = db.query(models.PacienteModel).filter(models.PacienteModel.numeroSUS == numeroSUS).first()
     if paciente is None:
         raise HTTPException(status_code=404, detail="Paciente not found")
+    HTTPException(200)
     return paciente
 
 @paciente_router.put("/pacientes/{numeroSUS}", response_model=schemas.Paciente)
@@ -36,6 +40,7 @@ def update_paciente(numeroSUS: str, paciente: schemas.PacienteUpdate, db: Sessio
         setattr(db_paciente, key, value)
     db.commit()
     db.refresh(db_paciente)
+    HTTPException(200)
     return db_paciente
 
 @paciente_router.delete("/pacientes/{numeroSUS}")
@@ -45,4 +50,5 @@ def delete_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
         raise HTTPException(status_code=404, detail="Paciente not found")
     db.delete(db_paciente)
     db.commit()
+    HTTPException(200)
     return {"detail": "Paciente deleted"}
