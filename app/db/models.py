@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime
 from sqlalchemy.orm import relationship
 from db.base import Base
+from datetime import datetime
 
 class RetornosModel(Base):
     __tablename__ = "retornos"
@@ -48,6 +49,7 @@ class FuncionarioModel(Base):
     idPerfil = Column(Integer, ForeignKey("perfis.id"), nullable=False, index=True)
     perfil = relationship("PerfilModel", back_populates="funcionarios")
     funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="funcionario")
+    logs = relationship("LogModel", back_populates="user")
 
 class ExameModel(Base):
     __tablename__ = "exames"
@@ -180,3 +182,19 @@ class EstratificacaoModel(Base):
     FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
     paciente = relationship("PacienteModel", back_populates="estratificacoes")
     prontuario = relationship("ProntuarioExame", back_populates="estratificacoes")
+
+class LogModel(Base):
+    __tablename__ = "logs"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    usuario_id = Column(Integer, ForeignKey("funcionarios.id"), nullable=False)
+    ip_origem = Column(String(255), nullable=False)
+    acao = Column(String(255), nullable=False) 
+    tabela_afetada = Column(String(255), nullable=True)
+    registro_id = Column(Integer, nullable=True)
+    descricao = Column(String(255), nullable=True)
+    status = Column(String(255), nullable=False)  
+    detalhes_erro = Column(String(255), nullable=True)
+    origem = Column(String(255), nullable=False) 
+    metodo_http = Column(String(10), nullable=True)  
+    user = relationship("FuncionarioModel", back_populates="logs")

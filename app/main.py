@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from decouple import config
 
-from paciente.routes import paciente_router
 from funcionario.routes import funcionario_router, test_router
 from medicamento.routes import medicamento_router
 from funcionarioespecialidade.routes import funcionario_especialidade_router
@@ -58,3 +57,6 @@ app.add_middleware(
     allow_methods=["*"], 
     allow_headers=["*"], 
 )
+
+scheduler = NotificationScheduler()
+scheduler.start()
