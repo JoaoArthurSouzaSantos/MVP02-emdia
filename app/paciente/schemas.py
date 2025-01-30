@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 
 class PacienteBase(BaseModel):
-    numeroSUS: str
+    numeroSUS: int
     dataNascimento: date
     sexo: str
     info: str

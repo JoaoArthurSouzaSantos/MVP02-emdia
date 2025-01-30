@@ -10,7 +10,8 @@ class PrescricaoSchema(BaseModel):
     frequencia: str
     dosagem: str
     fk_medicamento: int
-    fk_paciente: str
+    FkPaciente: int
+    fk_exame: int
 
     class Config:
         orm_mode = True

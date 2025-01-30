@@ -3,7 +3,7 @@ from typing import Optional
 
 class RetornosSchema(BaseModel):
     id: Optional[int]  # Opcional para criação (campo gerado automaticamente pelo banco)
-    FkPaciente: str
+    FkPaciente: int
     FkEspecialidade: int
 
     class Config:

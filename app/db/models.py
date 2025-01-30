@@ -13,9 +13,9 @@ class RetornosModel(Base):
 class ProntuarioExame(Base):
     __tablename__ = "prontuarios"
     id = Column(Integer, primary_key=True, index=True)
-    fkfuncionarioespecialidade = Column(Integer, ForeignKey("funcionariosEspecialidades.id"), nullable=False, index=True)
-    fkpaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-    fkexame = Column(Integer, ForeignKey("exames.id"), nullable=False)
+    FkFuncionarioEspecialidade = Column(Integer, ForeignKey("funcionariosEspecialidades.id"), nullable=False, index=True)
+    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    FkExame = Column(Integer, ForeignKey("exames.id"), nullable=False)
     paciente = relationship("PacienteModel", back_populates="prontuarios")
     funcionarioespecialidade = relationship("FuncionarioEspecialidadeModel", back_populates="prontuarios")
     exame = relationship("ExameModel", back_populates="prontuarios")
@@ -25,7 +25,7 @@ class PacientePatologia(Base):
     __tablename__ = "paciente_patologias"
     id = Column(Integer, primary_key=True, index=True)
     FkPatologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
-    Fkpaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
     patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
     paciente = relationship("PacienteModel", back_populates="patologias")
 
@@ -78,7 +78,7 @@ class PrescricaoModel(Base):
     frequencia = Column(String(255), nullable=False)
     dosagem = Column(String(255), nullable=False)
     fk_medicamento = Column(Integer, ForeignKey("medicamentos.id"), nullable=False)
-    Fkpaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_exame = Column(Integer, ForeignKey("exames.id"), nullable=True)  # Added foreign key
     paciente = relationship("PacienteModel", back_populates="prescricoes")
     medicamento = relationship("MedicamentoModel", back_populates="prescricoes")

@@ -2,9 +2,9 @@ from pydantic import BaseModel
 
 class ProntuarioExameSchema(BaseModel):
     id: int
-    FkFuncionario: int
-    FkPaciente: str
-    FkExame: str
+    FkFuncionarioEspecialidade: int
+    FkPaciente: int
+    FkExame: int
 
     class Config:
         orm_mode = True

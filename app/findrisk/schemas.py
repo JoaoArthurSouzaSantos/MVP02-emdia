@@ -12,6 +12,7 @@ class FindriskSchema(BaseModel):
     pont_atv_fisica: str
     pont_ingestao_frutas_e_verduras: str
     pont_hipertensao: str
+    FkPaciente: int
 
     class Config:
         orm_mode = True
