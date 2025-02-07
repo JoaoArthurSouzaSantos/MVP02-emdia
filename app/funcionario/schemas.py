@@ -5,7 +5,7 @@ class FuncionarioBase(BaseModel):
     cpf: str
     nome: str
     email: str
-    idPerfil: int
+    id_perfil: int
 
 
 class FuncionarioCreate(FuncionarioBase):

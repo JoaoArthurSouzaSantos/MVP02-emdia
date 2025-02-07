@@ -17,7 +17,7 @@ if config.config_file_name is not None:
 
 # Importar todas as models necessárias
 from db.models import (
-    RetornosModel, ExameModel, PacientePatologia, FuncionarioEspecialidadeModel,
+    TipoExameModel, ExameModel, PacientePatologia, TipoMedicamentoModel,
     FuncionarioModel, ExameModel, BiometriaModel, MedicamentoModel, PatologiaModel,
     PacienteModel, MedicamentoModel, FindriskModel, EspecialidadeModel, ConsultaModel,
     PerfilModel, PermissaoModel, PerfilPermissaoModel, EstratificacaoModel

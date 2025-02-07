@@ -158,6 +158,7 @@ class ConsultaModel(Base):
     medicamentos = relationship("MedicamentoModel", back_populates="consulta")
     exames = relationship("ExameModel", back_populates="consulta")
     estratificacoes = relationship("EstratificacaoModel", back_populates="consulta")
+    findrisk = relationship("FindriskModel", back_populates="consulta", cascade="all, delete-orphan")
 
 
 class PerfilModel(Base):
