@@ -54,5 +54,3 @@ app.add_middleware(
     allow_headers=["*"], 
 )
 
-scheduler = NotificationScheduler()
-scheduler.start()
