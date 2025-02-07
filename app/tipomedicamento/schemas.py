@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class FuncionarioEspecialidadeSchema(BaseModel):
+class MedicamentoSchema(BaseModel):
     id: Optional[int]  # Opcional para criação (auto-incrementado no banco)
-    FkFuncionario: int
-    FkEspecialidade: int
+    nome: str
+    info: Optional[str]
 
     class Config:
         orm_mode = True

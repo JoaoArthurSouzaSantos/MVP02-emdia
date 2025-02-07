@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app.db.models import (
     PacienteModel, FuncionarioModel, EspecialidadeModel, 
     FuncionarioEspecialidadeModel, ExameModel, BiometriaModel, 
-    PrescricaoModel, PatologiaModel, PacientePatologia, 
+    MedicamentoModel, PatologiaModel, PacientePatologia, 
     FindriskModel, EstratificacaoModel, PerfilModel, 
     PermissaoModel, PerfilPermissaoModel, ConsultaModel, 
     RetornosModel, MedicamentoModel
@@ -83,8 +83,8 @@ def seed_data(db: Session):
     db.commit()
 
     # Create prescriptions
-    prescription1 = PrescricaoModel(inicio=date(2023, 1, 1), fim=date(2023, 6, 1), status="Ativa", frequencia="Diária", dosagem="1 comprimido", fk_medicamento=1, Fkpaciente=patient1.numeroSUS)
-    prescription2 = PrescricaoModel(inicio=date(2023, 2, 1), fim=date(2023, 7, 1), status="Ativa", frequencia="Semanal", dosagem="2 comprimidos", fk_medicamento=2, Fkpaciente=patient2.numeroSUS)
+    prescription1 = MedicamentoModel(inicio=date(2023, 1, 1), fim=date(2023, 6, 1), status="Ativa", frequencia="Diária", dosagem="1 comprimido", fk_medicamento=1, Fkpaciente=patient1.numeroSUS)
+    prescription2 = MedicamentoModel(inicio=date(2023, 2, 1), fim=date(2023, 7, 1), status="Ativa", frequencia="Semanal", dosagem="2 comprimidos", fk_medicamento=2, Fkpaciente=patient2.numeroSUS)
     db.add_all([prescription1, prescription2])
     db.commit()
 

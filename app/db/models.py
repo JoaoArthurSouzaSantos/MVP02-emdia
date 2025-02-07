@@ -3,41 +3,29 @@ from sqlalchemy.orm import relationship
 from db.base import Base
 from datetime import datetime
 
-class RetornosModel(Base):
-    __tablename__ = "retornos"
+class ExameModel(Base):
+    __tablename__ = "exames"
     id = Column(Integer, primary_key=True, index=True)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
-    FkEspecialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
-    paciente = relationship("PacienteModel", back_populates="retornos")
-    especialidade = relationship("EspecialidadeModel", back_populates="retornos")
+    data_realizacao = Column(String(50), nullable=False)
+    resultado = Column(String(500), nullable=True)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_tipo_exame = Column(Integer, ForeignKey("tipos_exames.id"), nullable=False)
+    fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
 
-class ProntuarioExame(Base):
-    __tablename__ = "prontuarios"
-    id = Column(Integer, primary_key=True, index=True)
-    FkFuncionarioEspecialidade = Column(Integer, ForeignKey("funcionariosEspecialidades.id"), nullable=False, index=True)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-    FkExame = Column(Integer, ForeignKey("exames.id"), nullable=False)
-    paciente = relationship("PacienteModel", back_populates="prontuarios")
-    funcionarioespecialidade = relationship("FuncionarioEspecialidadeModel", back_populates="prontuarios")
-    exame = relationship("ExameModel", back_populates="prontuarios")
-    estratificacoes = relationship("EstratificacaoModel", back_populates="prontuario")
+    paciente = relationship("PacienteModel", back_populates="exames")
+    tipo_exame = relationship("TipoExameModel", back_populates="exames")
+    consulta = relationship("ConsultaModel", back_populates="exames")
+
 
 class PacientePatologia(Base):
     __tablename__ = "paciente_patologias"
     id = Column(Integer, primary_key=True, index=True)
-    FkPatologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+
     patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
     paciente = relationship("PacienteModel", back_populates="patologias")
 
-class FuncionarioEspecialidadeModel(Base):
-    __tablename__ = "funcionariosEspecialidades"
-    id = Column(Integer, primary_key=True, index=True)
-    FkFuncionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
-    FkEspecialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
-    funcionario = relationship("FuncionarioModel", back_populates="funcionarios")
-    especialidade = relationship("EspecialidadeModel", back_populates="funcionarios")
-    prontuarios = relationship("ProntuarioExame", back_populates="funcionarioespecialidade")
 
 class FuncionarioModel(Base):
     __tablename__ = "funcionarios"
@@ -46,19 +34,20 @@ class FuncionarioModel(Base):
     password = Column(String(255), nullable=False)
     nome = Column(String(255), unique=True, index=True, nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
-    idPerfil = Column(Integer, ForeignKey("perfis.id"), nullable=False, index=True)
-    perfil = relationship("PerfilModel", back_populates="funcionarios")
-    funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="funcionario")
-    logs = relationship("LogModel", back_populates="user")
+    id_perfil = Column(Integer, ForeignKey("perfis.id"), nullable=False, index=True)
 
-class ExameModel(Base):
-    __tablename__ = "exames"
+    perfil = relationship("PerfilModel", back_populates="funcionarios")
+    logs = relationship("LogModel", back_populates="user")
+    consultas = relationship("ConsultaModel", back_populates="funcionario")
+
+
+class TipoExameModel(Base):
+    __tablename__ = "tipos_exames"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
-    resultado = Column(String(500), nullable=True)
-    data_realizacao = Column(String(50), nullable=False)
-    prescricao = relationship("PrescricaoModel", back_populates="exame")
-    prontuarios = relationship("ProntuarioExame", back_populates="exame")
+
+    exames = relationship("ExameModel", back_populates="tipo_exame")
+
 
 class BiometriaModel(Base):
     __tablename__ = "biometrias"
@@ -68,55 +57,64 @@ class BiometriaModel(Base):
     altura = Column(Float, nullable=False)
     data = Column(Date, nullable=False)
     cintura = Column(Float, nullable=False)
-    paciente_i = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-    paciente = relationship("PacienteModel", back_populates="biometrias")
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
 
-class PrescricaoModel(Base):
-    __tablename__ = "prescricoes"
+    paciente = relationship("PacienteModel", back_populates="biometrias")
+    consulta = relationship("ConsultaModel", back_populates="biometrias")
+
+
+class MedicamentoModel(Base):
+    __tablename__ = "medicamentos"
     id = Column(Integer, primary_key=True, index=True)
-    inicio = Column(Date, nullable=False)
-    fim = Column(Date, nullable=True)
     status = Column(String(255), nullable=False)
     frequencia = Column(String(255), nullable=False)
     dosagem = Column(String(255), nullable=False)
-    fk_medicamento = Column(Integer, ForeignKey("medicamentos.id"), nullable=False)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-    fk_exame = Column(Integer, ForeignKey("exames.id"), nullable=True)  # Added foreign key
-    paciente = relationship("PacienteModel", back_populates="prescricoes")
-    medicamento = relationship("MedicamentoModel", back_populates="prescricoes")
-    exame = relationship("ExameModel", back_populates="prescricao")
+    fk_tipo_medicamento = Column(Integer, ForeignKey("tipos_medicamentos.id"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=True)
+
+    paciente = relationship("PacienteModel", back_populates="medicamentos")
+    tipo_medicamento = relationship("TipoMedicamentoModel", back_populates="medicamentos")
+    consulta = relationship("ConsultaModel", back_populates="medicamentos")
+
 
 class PatologiaModel(Base):
     __tablename__ = "patologia"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255))
+
     paciente_patologias = relationship("PacientePatologia", back_populates="patologia")
+
 
 class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(Integer, primary_key=True, index=True)
-    dataNascimento = Column(Date)
+    data_nascimento = Column(Date)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     telefone = Column(String(255), index=True)
     email = Column(String(255), index=True)
     nome = Column(String(255), index=True)
-    microRegiao = Column(String(255), index=True)
+    micro_regiao = Column(String(255), index=True)
+
     consultas = relationship("ConsultaModel", back_populates="paciente", cascade="all, delete-orphan")
     biometrias = relationship("BiometriaModel", back_populates="paciente", cascade="all, delete-orphan")
-    prescricoes = relationship("PrescricaoModel", back_populates="paciente", cascade="all, delete-orphan")
+    medicamentos = relationship("MedicamentoModel", back_populates="paciente", cascade="all, delete-orphan")
     patologias = relationship("PacientePatologia", back_populates="paciente", cascade="all, delete-orphan")
-    retornos = relationship("RetornosModel", back_populates="paciente", cascade="all, delete-orphan")
-    prontuarios = relationship("ProntuarioExame", back_populates="paciente", cascade="all, delete-orphan")
+    exames = relationship("ExameModel", back_populates="paciente", cascade="all, delete-orphan")
     findrisk = relationship("FindriskModel", back_populates="paciente", cascade="all, delete-orphan")
     estratificacoes = relationship("EstratificacaoModel", back_populates="paciente", cascade="all, delete-orphan")
 
-class MedicamentoModel(Base):
-    __tablename__ = "medicamentos"
+
+class TipoMedicamentoModel(Base):
+    __tablename__ = "tipos_medicamentos"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
     info = Column(String(255))
-    prescricoes = relationship("PrescricaoModel", back_populates="medicamento")
+
+    medicamentos = relationship("MedicamentoModel", back_populates="tipo_medicamento")
+
 
 class FindriskModel(Base):
     __tablename__ = "findrisk"
@@ -127,33 +125,44 @@ class FindriskModel(Base):
     classificacao = Column(String(255))
     pont_idade = Column(String(255))
     pont_imc = Column(String(255))
-    pont_circuferencia_cintura = Column(String(255))
+    pont_circunferencia_cintura = Column(String(255))
     pont_atv_fisica = Column(String(255))
     pont_ingestao_frutas_e_verduras = Column(String(255))
     pont_hipertensao = Column(String(255))
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+
     paciente = relationship("PacienteModel", back_populates="findrisk")
+
 
 class EspecialidadeModel(Base):
     __tablename__ = "especialidades"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), unique=True, nullable=False)
-    funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="especialidade")
-    retornos = relationship("RetornosModel", back_populates="especialidade", cascade="all, delete-orphan")
+
     consultas = relationship("ConsultaModel", back_populates="especialidade")
+
 
 class ConsultaModel(Base):
     __tablename__ = "consultas"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
-    FkEspecialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
+    fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
+    fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
+
     paciente = relationship("PacienteModel", back_populates="consultas")
     especialidade = relationship("EspecialidadeModel", back_populates="consultas")
+    funcionario = relationship("FuncionarioModel", back_populates="consultas")
+    biometrias = relationship("BiometriaModel", back_populates="consulta")
+    medicamentos = relationship("MedicamentoModel", back_populates="consulta")
+    exames = relationship("ExameModel", back_populates="consulta")
+    estratificacoes = relationship("EstratificacaoModel", back_populates="consulta")
+
 
 class PerfilModel(Base):
     __tablename__ = "perfis"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), unique=True, nullable=False, index=True)
+
     funcionarios = relationship("FuncionarioModel", back_populates="perfil")
     permissoes = relationship("PerfilPermissaoModel", back_populates="perfil", cascade="all, delete-orphan")
 
@@ -162,15 +171,18 @@ class PermissaoModel(Base):
     __tablename__ = "permissoes"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), unique=True, nullable=False, index=True)
-    perfilpermissao = relationship("PerfilPermissaoModel", back_populates="permissao", cascade="all, delete-orphan")
-    
+
+    perfil_permissoes = relationship("PerfilPermissaoModel", back_populates="permissao", cascade="all, delete-orphan")
+
+
 class PerfilPermissaoModel(Base):
     __tablename__ = "perfilpermissoes"
     id = Column(Integer, primary_key=True, index=True)
-    idPerfil = Column(Integer, ForeignKey("perfis.id"), nullable=False, index=True)
-    idPermissao = Column(Integer, ForeignKey("permissoes.id"), nullable=False, index=True)
+    id_perfil = Column(Integer, ForeignKey("perfis.id"), nullable=False, index=True)
+    id_permissao = Column(Integer, ForeignKey("permissoes.id"), nullable=False, index=True)
+
     perfil = relationship("PerfilModel", back_populates="permissoes")
-    permissao = relationship("PermissaoModel", back_populates="perfilpermissao")
+    permissao = relationship("PermissaoModel", back_populates="perfil_permissoes")
 
 
 class EstratificacaoModel(Base):
@@ -178,10 +190,12 @@ class EstratificacaoModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     data = Column(Date)
     categoria = Column(String(255), nullable=False)
-    FkProntuario = Column(Integer, ForeignKey("prontuarios.id"), nullable=False)
-    FkPaciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
+
     paciente = relationship("PacienteModel", back_populates="estratificacoes")
-    prontuario = relationship("ProntuarioExame", back_populates="estratificacoes")
+    consulta = relationship("ConsultaModel", back_populates="estratificacoes")
+
 
 class LogModel(Base):
     __tablename__ = "logs"
@@ -189,12 +203,13 @@ class LogModel(Base):
     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
     usuario_id = Column(Integer, ForeignKey("funcionarios.id"), nullable=False)
     ip_origem = Column(String(255), nullable=False)
-    acao = Column(String(255), nullable=False) 
+    acao = Column(String(255), nullable=False)
     tabela_afetada = Column(String(255), nullable=True)
     registro_id = Column(Integer, nullable=True)
     descricao = Column(String(255), nullable=True)
-    status = Column(String(255), nullable=False)  
+    status = Column(String(255), nullable=False)
     detalhes_erro = Column(String(255), nullable=True)
-    origem = Column(String(255), nullable=False) 
-    metodo_http = Column(String(10), nullable=True)  
+    origem = Column(String(255), nullable=False)
+    metodo_http = Column(String(10), nullable=True)
+
     user = relationship("FuncionarioModel", back_populates="logs")

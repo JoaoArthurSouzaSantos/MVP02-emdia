@@ -1,10 +1,17 @@
 from pydantic import BaseModel
+from datetime import date
 from typing import Optional
 
 class MedicamentoSchema(BaseModel):
-    id: Optional[int]  # Opcional para criação (auto-incrementado no banco)
-    nome: str
-    info: Optional[str]
+    id: int
+    inicio: date
+    fim: Optional[date]  # Campo opcional
+    status: str
+    frequencia: str
+    dosagem: str
+    fk_medicamento: int
+    FkPaciente: int
+    fk_exame: int
 
     class Config:
         orm_mode = True
