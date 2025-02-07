@@ -130,8 +130,10 @@ class FindriskModel(Base):
     pont_ingestao_frutas_e_verduras = Column(String(255))
     pont_hipertensao = Column(String(255))
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=True)
 
     paciente = relationship("PacienteModel", back_populates="findrisk")
+    consulta = relationship("ConsultaModel", back_populates="findrisk")
 
 
 class EspecialidadeModel(Base):
