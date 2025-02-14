@@ -2,7 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, status, APIRouter
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
-
+from fastapi.security import OAuth2PasswordRequestForm
+from jose import JWTError
 from db.base import SessionLocal
 from db.models import FuncionarioModel
 from funcionario.schemas import FuncionarioCreate, FuncionarioOut
@@ -37,7 +38,7 @@ def register_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(g
         password=hashed_password,
         nome=funcionario.nome,
         email=funcionario.email,
-        idPerfil=funcionario.idPerfil,  # Ajuste de nomenclatura
+        id_perfil=funcionario.id_perfil,  # Ajuste de nomenclatura
     )
     db.add(db_funcionario)
     db.commit()
