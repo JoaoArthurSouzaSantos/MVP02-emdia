@@ -148,6 +148,9 @@ class EspecialidadeModel(Base):
 class ConsultaModel(Base):
     __tablename__ = "consultas"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    data = Column(Date)
+    status = Column(Integer, nullable=False)
+    observacoes = Column(String(255), unique=True, nullable=False)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
     fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
     fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
