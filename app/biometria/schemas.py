@@ -7,7 +7,8 @@ class BiometriaSchema(BaseModel):
     altura: float
     data: date
     cintura: float
-    paciente_i: int
+    fk_paciente: int
+    fk_consulta: int
 
     class Config:
         orm_mode = True

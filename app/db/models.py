@@ -6,7 +6,7 @@ from datetime import datetime
 class ExameModel(Base):
     __tablename__ = "exames"
     id = Column(Integer, primary_key=True, index=True)
-    data_realizacao = Column(String(50), nullable=False)
+    data_realizacao = Column(Date, nullable=False)
     resultado = Column(String(500), nullable=True)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_tipo_exame = Column(Integer, ForeignKey("tipos_exames.id"), nullable=False)
@@ -15,17 +15,6 @@ class ExameModel(Base):
     paciente = relationship("PacienteModel", back_populates="exames")
     tipo_exame = relationship("TipoExameModel", back_populates="exames")
     consulta = relationship("ConsultaModel", back_populates="exames")
-
-
-class PacientePatologia(Base):
-    __tablename__ = "paciente_patologias"
-    id = Column(Integer, primary_key=True, index=True)
-    cpf = Column(String(255), unique=True, index=True, nullable=False)
-    fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-
-    patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
-    paciente = relationship("PacienteModel", back_populates="patologias")
 
 
 class FuncionarioModel(Base):
@@ -46,7 +35,6 @@ class TipoExameModel(Base):
     __tablename__ = "tipos_exames"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
-
     exames = relationship("ExameModel", back_populates="tipo_exame")
 
 
@@ -91,6 +79,7 @@ class PatologiaModel(Base):
 class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(Integer, primary_key=True, index=True)
+    cpf = Column(String(255), unique=True, index=True)
     data_nascimento = Column(Date)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
@@ -106,6 +95,16 @@ class PacienteModel(Base):
     exames = relationship("ExameModel", back_populates="paciente", cascade="all, delete-orphan")
     findrisk = relationship("FindriskModel", back_populates="paciente", cascade="all, delete-orphan")
     estratificacoes = relationship("EstratificacaoModel", back_populates="paciente", cascade="all, delete-orphan")
+
+
+class PacientePatologia(Base):
+    __tablename__ = "paciente_patologias"
+    id = Column(Integer, primary_key=True, index=True)
+    fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+
+    patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
+    paciente = relationship("PacienteModel", back_populates="patologias")
 
 
 class TipoMedicamentoModel(Base):

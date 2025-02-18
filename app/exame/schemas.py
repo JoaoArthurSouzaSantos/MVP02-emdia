@@ -1,8 +1,9 @@
 from pydantic import BaseModel
+from datetime import date
 
 class ExameSchema(BaseModel):
     id: int
-    data_realizacao: str
+    data_realizacao: date
     resultado: str
     fk_paciente: int
     fk_tipo_exame: int
