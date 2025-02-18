@@ -5,8 +5,8 @@ class EstratificacaoSchema(BaseModel):
     id: int
     data: date
     categoria: str
-    fk_prontuario: int
-    fk_paciente: str
+    fk_paciente: int
+    fk_consulta: int
 
     class Config:
         orm_mode = True

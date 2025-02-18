@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from db.base import Base
 from datetime import datetime
@@ -20,6 +20,7 @@ class ExameModel(Base):
 class PacientePatologia(Base):
     __tablename__ = "paciente_patologias"
     id = Column(Integer, primary_key=True, index=True)
+    cpf = Column(String(255), unique=True, index=True, nullable=False)
     fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
 
@@ -147,6 +148,9 @@ class EspecialidadeModel(Base):
 class ConsultaModel(Base):
     __tablename__ = "consultas"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    data = Column(Date)
+    status = Column(Integer, nullable=False)
+    observacoes = Column(String(255), unique=True, nullable=False)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
     fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
     fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)

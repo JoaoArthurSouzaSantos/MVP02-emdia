@@ -15,3 +15,6 @@ class FuncionarioCreate(FuncionarioBase):
 class FuncionarioOut(FuncionarioBase):
     id: int
     password: str
+
+    class Config:
+        orm_mode = True

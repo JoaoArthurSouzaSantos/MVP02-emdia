@@ -4,14 +4,12 @@ from typing import Optional
 
 class MedicamentoSchema(BaseModel):
     id: int
-    inicio: date
-    fim: Optional[date]  # Campo opcional
     status: str
     frequencia: str
     dosagem: str
-    fk_medicamento: int
-    FkPaciente: int
-    fk_exame: int
+    fk_tipo_medicamento: int
+    fk_paciente: int
+    fk_consulta: Optional[int]
 
     class Config:
         orm_mode = True

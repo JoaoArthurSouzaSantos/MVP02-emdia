@@ -8,11 +8,12 @@ class FindriskSchema(BaseModel):
     classificacao: str
     pont_idade: str
     pont_imc: str
-    pont_circuferencia_cintura: str
+    pont_circunferencia_cintura: str
     pont_atv_fisica: str
     pont_ingestao_frutas_e_verduras: str
     pont_hipertensao: str
-    FkPaciente: int
+    fk_paciente: int
+    fk_consulta: int
 
     class Config:
         orm_mode = True
