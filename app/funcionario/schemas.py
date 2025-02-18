@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class FuncionarioBase(BaseModel):
@@ -18,3 +19,10 @@ class FuncionarioOut(FuncionarioBase):
 
     class Config:
         orm_mode = True
+
+
+class FuncionarioUpdate(BaseModel):
+    nome: Optional[str] = None
+    email: Optional[str] = None
+    id_perfil: Optional[int] = None
+    password: Optional[str] = None

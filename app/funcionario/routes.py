@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError
 from db.base import SessionLocal
 from db.models import FuncionarioModel
-from funcionario.schemas import FuncionarioCreate, FuncionarioOut
+from funcionario.schemas import FuncionarioCreate, FuncionarioOut, FuncionarioUpdate  # Importar o novo schema
 from depends import get_db_session
 from funcionario.auth import AuthService
 
@@ -83,6 +83,24 @@ def read_funcionario_me(token: str = Depends(oauth2_scheme), db: Session = Depen
     if not funcionario:
         raise credentials_exception
     return funcionario
+
+
+# Rota para editar um funcionário
+@funcionario_router.put("/funcionarios/{funcionario_id}", response_model=FuncionarioOut)
+def update_funcionario(funcionario_id: int, funcionario: FuncionarioUpdate, db: Session = Depends(get_db_session)):
+    db_funcionario = db.query(FuncionarioModel).filter(FuncionarioModel.id == funcionario_id).first()
+    if not db_funcionario:
+        raise HTTPException(status_code=404, detail="Funcionário não encontrado")
+
+    db_funcionario.nome = funcionario.nome
+    db_funcionario.email = funcionario.email
+    db_funcionario.id_perfil = funcionario.id_perfil
+    if funcionario.password:
+        db_funcionario.password = auth_service.get_password_hash(funcionario.password)
+
+    db.commit()
+    db.refresh(db_funcionario)
+    return db_funcionario
 
 
 # Rota de teste
