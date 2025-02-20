@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime, Boolean
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime
 from sqlalchemy.orm import relationship
 from db.base import Base
 from datetime import datetime
@@ -6,7 +6,7 @@ from datetime import datetime
 class ExameModel(Base):
     __tablename__ = "exames"
     id = Column(Integer, primary_key=True, index=True)
-    data_realizacao = Column(Date, nullable=False)
+    data_realizacao = Column(String(50), nullable=False)
     resultado = Column(String(500), nullable=True)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_tipo_exame = Column(Integer, ForeignKey("tipos_exames.id"), nullable=False)
@@ -15,6 +15,16 @@ class ExameModel(Base):
     paciente = relationship("PacienteModel", back_populates="exames")
     tipo_exame = relationship("TipoExameModel", back_populates="exames")
     consulta = relationship("ConsultaModel", back_populates="exames")
+
+
+class PacientePatologia(Base):
+    __tablename__ = "paciente_patologias"
+    id = Column(Integer, primary_key=True, index=True)
+    fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
+    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+
+    patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
+    paciente = relationship("PacienteModel", back_populates="patologias")
 
 
 class FuncionarioModel(Base):
@@ -35,6 +45,7 @@ class TipoExameModel(Base):
     __tablename__ = "tipos_exames"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
+
     exames = relationship("ExameModel", back_populates="tipo_exame")
 
 
@@ -75,19 +86,23 @@ class PatologiaModel(Base):
 
     paciente_patologias = relationship("PacientePatologia", back_populates="patologia")
 
-
+class MicroRegiaoModel(Base):
+    __tablename__ = "microregiao"
+    id = Column(Integer, nullable=False, primary_key=True)
+    nome = Column(String, nullable=False)
+    
 class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(Integer, primary_key=True, index=True)
-    cpf = Column(String(255), unique=True, index=True)
     data_nascimento = Column(Date)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     telefone = Column(String(255), index=True)
     email = Column(String(255), index=True)
     nome = Column(String(255), index=True)
-    micro_regiao = Column(String(255), index=True)
-
+    micro_regiao_id = Column(ForeignKey("MicroRegiaoModel.id"))
+    
+    micro_regiao = relationship("MicroRegiaoModel", back_populates="paciente", cascade="all, delete-orphan")
     consultas = relationship("ConsultaModel", back_populates="paciente", cascade="all, delete-orphan")
     biometrias = relationship("BiometriaModel", back_populates="paciente", cascade="all, delete-orphan")
     medicamentos = relationship("MedicamentoModel", back_populates="paciente", cascade="all, delete-orphan")
@@ -95,16 +110,6 @@ class PacienteModel(Base):
     exames = relationship("ExameModel", back_populates="paciente", cascade="all, delete-orphan")
     findrisk = relationship("FindriskModel", back_populates="paciente", cascade="all, delete-orphan")
     estratificacoes = relationship("EstratificacaoModel", back_populates="paciente", cascade="all, delete-orphan")
-
-
-class PacientePatologia(Base):
-    __tablename__ = "paciente_patologias"
-    id = Column(Integer, primary_key=True, index=True)
-    fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
-
-    patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
-    paciente = relationship("PacienteModel", back_populates="patologias")
 
 
 class TipoMedicamentoModel(Base):
@@ -147,9 +152,6 @@ class EspecialidadeModel(Base):
 class ConsultaModel(Base):
     __tablename__ = "consultas"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    data = Column(Date)
-    status = Column(Integer, nullable=False)
-    observacoes = Column(String(255), unique=True, nullable=False)
     fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
     fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
     fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
