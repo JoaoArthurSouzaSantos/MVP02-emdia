@@ -22,11 +22,11 @@ def upgrade() -> None:
     op.create_table(
         "micro_regiao",
         sa.Column("id", sa.Integer,  primary_key=True, nullable=False),
-        sa.Column("nome",sa.String(255) , nullable=False)
+        sa.Column("nome", sa.String(255) , nullable=False)
     )
 
-    op.drop_column("pacientes", "microRegiao")
-    op.add_columnn(
+    op.drop_column("pacientes", "micro_regiao")
+    op.add_column(
         "pacientes",
         sa.Column("micro_regiao_id", sa.Integer, nullable=False)
     )
