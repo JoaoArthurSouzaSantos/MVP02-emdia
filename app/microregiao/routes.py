@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from schemas import MicroRegiaoSchema
+from .schemas import MicroRegiaoSchema  # Updated import statement
 from depends import get_db_session
 from db.models import MicroRegiaoModel
 from sqlalchemy.orm import Session
@@ -43,10 +43,10 @@ def update_microregiao(id: int, schema: MicroRegiaoSchema, db_session: Session =
     return microregiao_model
 
 @microregiao_router.delete("/microregiao/delete_microregiao/{id}")
-def delete_microregiao(id: int, schema: MicroRegiaoSchema, db_session: Session = Depends(get_db_session)):
+def delete_microregiao(id: int, db_session: Session = Depends(get_db_session)):  # Removed schema parameter
     microregiao_model = db_session.query(MicroRegiaoModel).filter(MicroRegiaoModel.id == id).first()
     if not microregiao_model:
         raise HTTPException(status_code=404, detail="Micro Região não encontrada")
     db_session.delete(microregiao_model)
     db_session.commit()
-    return JSONResponse(content={'msg': 'Biometria deleted successfully'}, status_code=200)
+    return JSONResponse(content={'msg': 'Micro Região deleted successfully'}, status_code=200)

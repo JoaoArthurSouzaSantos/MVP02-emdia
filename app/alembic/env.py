@@ -1,4 +1,4 @@
-from db.base import Base  # Corrigir o caminho da importação
+from db.base import Base  
 from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import pool
