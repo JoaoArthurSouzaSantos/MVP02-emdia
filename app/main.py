@@ -19,6 +19,7 @@ from biometria.routes import biometria_router
 from tipoexame.routes import tipo_exame_router
 from medicamento.routes import medicamento_router
 from paciente.routes import paciente_router
+from microregiao.routes import microregiao_router
 
 
 app = FastAPI()
@@ -41,6 +42,7 @@ app.include_router(perfil_router, prefix="/perfil", tags=["perfis"])
 app.include_router(biometria_router, prefix="/biometria", tags=["biometrias"])
 app.include_router(tipo_exame_router, prefix="/exame", tags=["exames"])
 app.include_router(medicamento_router, prefix="/medicamento", tags=["prescricoes"])
+app.include_router(microregiao_router, prefix="/microregiao", tags=["microregioes"])
 
 @app.get("/openapi.json")
 async def get_open_api_endpoint():
