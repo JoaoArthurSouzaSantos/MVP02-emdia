@@ -20,7 +20,7 @@ from db.models import (
     TipoExameModel, ExameModel, PacientePatologia, TipoMedicamentoModel,
     FuncionarioModel, ExameModel, BiometriaModel, MedicamentoModel, PatologiaModel,
     PacienteModel, MedicamentoModel, FindriskModel, EspecialidadeModel, ConsultaModel,
-    PerfilModel, PermissaoModel, PerfilPermissaoModel, EstratificacaoModel
+    PerfilModel, PermissaoModel, PerfilPermissaoModel, EstratificacaoModel,MicroRegiaoModel,
 )
 
 target_metadata = Base.metadata

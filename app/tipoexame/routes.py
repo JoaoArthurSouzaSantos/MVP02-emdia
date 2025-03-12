@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from typing import List
 from .schemas import TipoExameSchema
 from db.models import TipoExameModel
 from depends import get_db_session
@@ -44,3 +45,8 @@ def delete_tipo_exame(id: int, db_session: Session = Depends(get_db_session)):
     db_session.delete(tipo_exame_model)
     db_session.commit()
     return JSONResponse(content={'msg': 'Tipo de exame deletado com successo'}, status_code=status.HTTP_200_OK)
+
+@tipo_exame_router.get('/tipo_exame/active', response_model=List[TipoExameSchema])
+def get_active_tipo_exames(db_session: Session = Depends(get_db_session)):
+    active_tipo_exames = db_session.query(TipoExameModel).filter(TipoExameModel.status == True).all()
+    return active_tipo_exames

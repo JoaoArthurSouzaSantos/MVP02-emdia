@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from db.models import MedicamentoModel
 from .schemas import MedicamentoSchema
 from depends import get_db_session
+from typing import List
 
 medicamento_router = APIRouter()
 
@@ -21,6 +22,11 @@ def get_medicamento(id: int, db_session: Session = Depends(get_db_session)):
     if not medicamento_model:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="medicamento not found")
     return medicamento_model
+
+@medicamento_router.get('/medicamentos', response_model=List[MedicamentoSchema])
+def get_all_medicamentos(db_session: Session = Depends(get_db_session)):
+    medicamentos = db_session.query(MedicamentoModel).all()
+    return medicamentos
 
 @medicamento_router.put('/medicamento/{id}', response_model=MedicamentoSchema)
 def update_medicamento(id: int, medicamento: MedicamentoSchema, db_session: Session = Depends(get_db_session)):

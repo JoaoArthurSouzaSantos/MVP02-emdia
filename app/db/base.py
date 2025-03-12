@@ -1,4 +1,4 @@
 from sqlalchemy.ext.declarative import declarative_base
-from .connection import engine, Session as SessionLocal
+from db.connection import engine, Session as SessionLocal
 
 Base = declarative_base()

@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from db.base import Base
 from datetime import datetime
+
 
 class ExameModel(Base):
     __tablename__ = "exames"
@@ -45,6 +46,7 @@ class TipoExameModel(Base):
     __tablename__ = "tipos_exames"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
+    status = Column(Boolean, default=True, nullable=False)  # New field
 
     exames = relationship("ExameModel", back_populates="tipo_exame")
 
@@ -89,8 +91,10 @@ class PatologiaModel(Base):
 class MicroRegiaoModel(Base):
     __tablename__ = "microregiao"
     id = Column(Integer, nullable=False, primary_key=True)
-    nome = Column(String, nullable=False)
+    nome = Column(String(255), nullable=False)
     
+    paciente = relationship("PacienteModel", back_populates="micro_regiao")
+
 class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(Integer, primary_key=True, index=True)
@@ -100,7 +104,7 @@ class PacienteModel(Base):
     telefone = Column(String(255), index=True)
     email = Column(String(255), index=True)
     nome = Column(String(255), index=True)
-    micro_regiao_id = Column(ForeignKey("MicroRegiaoModel.id"))
+    micro_regiao_id = Column(Integer, ForeignKey("microregiao.id"))
     
     micro_regiao = relationship("MicroRegiaoModel", back_populates="paciente", cascade="all, delete-orphan")
     consultas = relationship("ConsultaModel", back_populates="paciente", cascade="all, delete-orphan")
