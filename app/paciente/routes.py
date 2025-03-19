@@ -22,6 +22,26 @@ def read_pacientes(db: Session = Depends(get_db_session)):
     HTTPException(200)
     return pacientes
 
+@paciente_router.get("/pacientes/microregiao")
+def get_pacientes_with_microregiao(db: Session = Depends(get_db_session)):
+    pacientes = db.query(models.PacienteModel).all()
+    result = []
+    for p in pacientes:
+        microregiao_name = p.micro_regiao.nome if p.micro_regiao else None
+        result.append({
+            "numeroSUS": p.numeroSUS,
+            "data_nascimento": p.data_nascimento,
+            "cpf": p.cpf,
+            "sexo": p.sexo,
+            "info": p.info,
+            "telefone": p.telefone,
+            "email": p.email,
+            "nome": p.nome,
+            "micro_regiao_id": p.micro_regiao_id,
+            "micro_regiao_nome": microregiao_name
+        })
+    return result
+
 @paciente_router.get("/pacientes/{numeroSUS}", response_model=schemas.Paciente)
 def read_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
     int(numeroSUS)
@@ -53,22 +73,4 @@ def delete_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
     HTTPException(200)
     return {"detail": "Paciente deleted"}
 
-@paciente_router.get("/pacientes/microregiao")
-def get_pacientes_with_microregiao(db: Session = Depends(get_db_session)):
-    pacientes = db.query(models.PacienteModel).all()
-    result = []
-    for p in pacientes:
-        microregiao_name = p.micro_regiao.nome if p.micro_regiao else None
-        result.append({
-            "numeroSUS": p.numeroSUS,
-            "data_nascimento": p.data_nascimento,
-            "cpf": p.cpf,
-            "sexo": p.sexo,
-            "info": p.info,
-            "telefone": p.telefone,
-            "email": p.email,
-            "nome": p.nome,
-            "micro_regiao_id": p.micro_regiao_id,
-            "micro_regiao_nome": microregiao_name
-        })
-    return result
+
