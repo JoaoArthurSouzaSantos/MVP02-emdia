@@ -46,7 +46,7 @@ class TipoExameModel(Base):
     __tablename__ = "tipos_exames"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), nullable=False)
-    status = Column(Boolean, default=True, nullable=False)  # New field
+    status = Column(Boolean, default=True, nullable=False)  
 
     exames = relationship("ExameModel", back_populates="tipo_exame")
 
