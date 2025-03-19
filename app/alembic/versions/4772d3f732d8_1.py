@@ -1,8 +1,8 @@
-"""commit 1
+"""1
 
-Revision ID: fbb1524d42c9
+Revision ID: 4772d3f732d8
 Revises: 
-Create Date: 2025-02-07 16:17:19.390563
+Create Date: 2025-03-19 09:35:34.484492
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'fbb1524d42c9'
+revision: str = '4772d3f732d8'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,24 +27,11 @@ def upgrade() -> None:
     sa.UniqueConstraint('nome')
     )
     op.create_index(op.f('ix_especialidades_id'), 'especialidades', ['id'], unique=False)
-    op.create_table('pacientes',
-    sa.Column('numeroSUS', sa.Integer(), nullable=False),
-    sa.Column('data_nascimento', sa.Date(), nullable=True),
-    sa.Column('sexo', sa.String(length=255), nullable=True),
-    sa.Column('info', sa.String(length=255), nullable=True),
-    sa.Column('telefone', sa.String(length=255), nullable=True),
-    sa.Column('email', sa.String(length=255), nullable=True),
-    sa.Column('nome', sa.String(length=255), nullable=True),
-    sa.Column('micro_regiao', sa.String(length=255), nullable=True),
-    sa.PrimaryKeyConstraint('numeroSUS')
+    op.create_table('microregiao',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('nome', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_pacientes_email'), 'pacientes', ['email'], unique=False)
-    op.create_index(op.f('ix_pacientes_info'), 'pacientes', ['info'], unique=False)
-    op.create_index(op.f('ix_pacientes_micro_regiao'), 'pacientes', ['micro_regiao'], unique=False)
-    op.create_index(op.f('ix_pacientes_nome'), 'pacientes', ['nome'], unique=False)
-    op.create_index(op.f('ix_pacientes_numeroSUS'), 'pacientes', ['numeroSUS'], unique=False)
-    op.create_index(op.f('ix_pacientes_sexo'), 'pacientes', ['sexo'], unique=False)
-    op.create_index(op.f('ix_pacientes_telefone'), 'pacientes', ['telefone'], unique=False)
     op.create_table('patologia',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(length=255), nullable=True),
@@ -68,6 +55,7 @@ def upgrade() -> None:
     op.create_table('tipos_exames',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('nome', sa.String(length=255), nullable=False),
+    sa.Column('status', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_tipos_exames_id'), 'tipos_exames', ['id'], unique=False)
@@ -93,15 +81,24 @@ def upgrade() -> None:
     op.create_index(op.f('ix_funcionarios_id'), 'funcionarios', ['id'], unique=False)
     op.create_index(op.f('ix_funcionarios_id_perfil'), 'funcionarios', ['id_perfil'], unique=False)
     op.create_index(op.f('ix_funcionarios_nome'), 'funcionarios', ['nome'], unique=True)
-    op.create_table('paciente_patologias',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('fk_patologia', sa.Integer(), nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
-    sa.ForeignKeyConstraint(['fk_patologia'], ['patologia.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    op.create_table('pacientes',
+    sa.Column('numeroSUS', sa.Integer(), nullable=False),
+    sa.Column('data_nascimento', sa.Date(), nullable=True),
+    sa.Column('sexo', sa.String(length=255), nullable=True),
+    sa.Column('info', sa.String(length=255), nullable=True),
+    sa.Column('telefone', sa.String(length=255), nullable=True),
+    sa.Column('email', sa.String(length=255), nullable=True),
+    sa.Column('nome', sa.String(length=255), nullable=True),
+    sa.Column('micro_regiao_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['micro_regiao_id'], ['microregiao.id'], ),
+    sa.PrimaryKeyConstraint('numeroSUS')
     )
-    op.create_index(op.f('ix_paciente_patologias_id'), 'paciente_patologias', ['id'], unique=False)
+    op.create_index(op.f('ix_pacientes_email'), 'pacientes', ['email'], unique=False)
+    op.create_index(op.f('ix_pacientes_info'), 'pacientes', ['info'], unique=False)
+    op.create_index(op.f('ix_pacientes_nome'), 'pacientes', ['nome'], unique=False)
+    op.create_index(op.f('ix_pacientes_numeroSUS'), 'pacientes', ['numeroSUS'], unique=False)
+    op.create_index(op.f('ix_pacientes_sexo'), 'pacientes', ['sexo'], unique=False)
+    op.create_index(op.f('ix_pacientes_telefone'), 'pacientes', ['telefone'], unique=False)
     op.create_table('perfilpermissoes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_perfil', sa.Integer(), nullable=False),
@@ -144,6 +141,15 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_logs_id'), 'logs', ['id'], unique=False)
+    op.create_table('paciente_patologias',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('fk_patologia', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
+    sa.ForeignKeyConstraint(['fk_patologia'], ['patologia.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_paciente_patologias_id'), 'paciente_patologias', ['id'], unique=False)
     op.create_table('biometrias',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('imc', sa.Float(), nullable=False),
@@ -230,6 +236,8 @@ def downgrade() -> None:
     op.drop_table('estratificacoes')
     op.drop_index(op.f('ix_biometrias_id'), table_name='biometrias')
     op.drop_table('biometrias')
+    op.drop_index(op.f('ix_paciente_patologias_id'), table_name='paciente_patologias')
+    op.drop_table('paciente_patologias')
     op.drop_index(op.f('ix_logs_id'), table_name='logs')
     op.drop_table('logs')
     op.drop_index(op.f('ix_consultas_id'), table_name='consultas')
@@ -241,8 +249,13 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_perfilpermissoes_id_perfil'), table_name='perfilpermissoes')
     op.drop_index(op.f('ix_perfilpermissoes_id'), table_name='perfilpermissoes')
     op.drop_table('perfilpermissoes')
-    op.drop_index(op.f('ix_paciente_patologias_id'), table_name='paciente_patologias')
-    op.drop_table('paciente_patologias')
+    op.drop_index(op.f('ix_pacientes_telefone'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_sexo'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_numeroSUS'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_nome'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_info'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_email'), table_name='pacientes')
+    op.drop_table('pacientes')
     op.drop_index(op.f('ix_funcionarios_nome'), table_name='funcionarios')
     op.drop_index(op.f('ix_funcionarios_id_perfil'), table_name='funcionarios')
     op.drop_index(op.f('ix_funcionarios_id'), table_name='funcionarios')
@@ -261,14 +274,7 @@ def downgrade() -> None:
     op.drop_table('perfis')
     op.drop_index(op.f('ix_patologia_id'), table_name='patologia')
     op.drop_table('patologia')
-    op.drop_index(op.f('ix_pacientes_telefone'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_sexo'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_numeroSUS'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_nome'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_micro_regiao'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_info'), table_name='pacientes')
-    op.drop_index(op.f('ix_pacientes_email'), table_name='pacientes')
-    op.drop_table('pacientes')
+    op.drop_table('microregiao')
     op.drop_index(op.f('ix_especialidades_id'), table_name='especialidades')
     op.drop_table('especialidades')
     # ### end Alembic commands ###

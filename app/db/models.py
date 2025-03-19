@@ -88,6 +88,7 @@ class PatologiaModel(Base):
 
     paciente_patologias = relationship("PacientePatologia", back_populates="patologia")
 
+
 class MicroRegiaoModel(Base):
     __tablename__ = "microregiao"
     id = Column(Integer, nullable=False, primary_key=True)
@@ -95,10 +96,12 @@ class MicroRegiaoModel(Base):
     
     paciente = relationship("PacienteModel", back_populates="micro_regiao")
 
+
 class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(Integer, primary_key=True, index=True)
     data_nascimento = Column(Date)
+    cpf = Column(String(255), index=True)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     telefone = Column(String(255), index=True)
@@ -106,7 +109,8 @@ class PacienteModel(Base):
     nome = Column(String(255), index=True)
     micro_regiao_id = Column(Integer, ForeignKey("microregiao.id"))
     
-    micro_regiao = relationship("MicroRegiaoModel", back_populates="paciente", cascade="all, delete-orphan")
+    # Removido delete-orphan do cascade
+    micro_regiao = relationship("MicroRegiaoModel", back_populates="paciente")
     consultas = relationship("ConsultaModel", back_populates="paciente", cascade="all, delete-orphan")
     biometrias = relationship("BiometriaModel", back_populates="paciente", cascade="all, delete-orphan")
     medicamentos = relationship("MedicamentoModel", back_populates="paciente", cascade="all, delete-orphan")

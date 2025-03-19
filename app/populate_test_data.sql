@@ -2,8 +2,8 @@
 INSERT INTO microregiao (id, nome) VALUES (1, 'Micro Região Teste');
 
 -- Insert into pacientes
-INSERT INTO pacientes (numeroSUS, data_nascimento, sexo, info, telefone, email, nome, micro_regiao_id)
-VALUES (123456789, '1990-01-01', 'Masculino', 'Paciente teste', '123456789', 'paciente@teste.com', 'Paciente Teste', 1);
+INSERT INTO pacientes (numeroSUS, data_nascimento, sexo, info, telefone, email, nome, micro_regiao_id , cpf)
+VALUES (123456789, '1990-01-01', 'Masculino', 'Paciente teste', '123456789', 'paciente@teste.com', 'Paciente Teste', 1 ,'111111');
 
 -- Insert into perfis
 INSERT INTO perfis (id, name) VALUES (1, 'Administrador');

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from .schemas import MicroRegiaoSchema  # Updated import statement
+from .schemas import MicroRegiaoSchema
 from depends import get_db_session
 from db.models import MicroRegiaoModel
 from sqlalchemy.orm import Session

@@ -17,8 +17,8 @@ def create_paciente(paciente: schemas.PacienteCreate, db: Session = Depends(get_
     return db_paciente
 
 @paciente_router.get("/pacientes/", response_model=List[schemas.Paciente])
-def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db_session)):
-    pacientes = db.query(models.PacienteModel).offset(skip).limit(limit).all()
+def read_pacientes(db: Session = Depends(get_db_session)):
+    pacientes = db.query(models.PacienteModel).all()
     HTTPException(200)
     return pacientes
 
@@ -52,3 +52,23 @@ def delete_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
     db.commit()
     HTTPException(200)
     return {"detail": "Paciente deleted"}
+
+@paciente_router.get("/pacientes/microregiao")
+def get_pacientes_with_microregiao(db: Session = Depends(get_db_session)):
+    pacientes = db.query(models.PacienteModel).all()
+    result = []
+    for p in pacientes:
+        microregiao_name = p.micro_regiao.nome if p.micro_regiao else None
+        result.append({
+            "numeroSUS": p.numeroSUS,
+            "data_nascimento": p.data_nascimento,
+            "cpf": p.cpf,
+            "sexo": p.sexo,
+            "info": p.info,
+            "telefone": p.telefone,
+            "email": p.email,
+            "nome": p.nome,
+            "micro_regiao_id": p.micro_regiao_id,
+            "micro_regiao_nome": microregiao_name
+        })
+    return result
