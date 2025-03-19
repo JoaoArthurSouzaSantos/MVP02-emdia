@@ -9,7 +9,7 @@ class ExameModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     data_realizacao = Column(String(50), nullable=False)
     resultado = Column(String(500), nullable=True)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_tipo_exame = Column(Integer, ForeignKey("tipos_exames.id"), nullable=False)
     fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
 
@@ -22,7 +22,7 @@ class PacientePatologia(Base):
     __tablename__ = "paciente_patologias"
     id = Column(Integer, primary_key=True, index=True)
     fk_patologia = Column(Integer, ForeignKey("patologia.id"), nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
 
     patologia = relationship("PatologiaModel", back_populates="paciente_patologias")
     paciente = relationship("PacienteModel", back_populates="patologias")
@@ -59,7 +59,7 @@ class BiometriaModel(Base):
     altura = Column(Float, nullable=False)
     data = Column(Date, nullable=False)
     cintura = Column(Float, nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
 
     paciente = relationship("PacienteModel", back_populates="biometrias")
@@ -73,7 +73,7 @@ class MedicamentoModel(Base):
     frequencia = Column(String(255), nullable=False)
     dosagem = Column(String(255), nullable=False)
     fk_tipo_medicamento = Column(Integer, ForeignKey("tipos_medicamentos.id"), nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=True)
 
     paciente = relationship("PacienteModel", back_populates="medicamentos")
@@ -99,7 +99,7 @@ class MicroRegiaoModel(Base):
 
 class PacienteModel(Base):
     __tablename__ = "pacientes"
-    numeroSUS = Column(Integer, primary_key=True, index=True)
+    numeroSUS = Column(String(255), primary_key=True, index=True)
     data_nascimento = Column(Date)
     cpf = Column(String(255), index=True)
     sexo = Column(String(255), index=True)
@@ -142,7 +142,7 @@ class FindriskModel(Base):
     pont_atv_fisica = Column(String(255))
     pont_ingestao_frutas_e_verduras = Column(String(255))
     pont_hipertensao = Column(String(255))
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=True)
 
     paciente = relationship("PacienteModel", back_populates="findrisk")
@@ -160,7 +160,7 @@ class EspecialidadeModel(Base):
 class ConsultaModel(Base):
     __tablename__ = "consultas"
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
     fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
     fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
 
@@ -206,7 +206,7 @@ class EstratificacaoModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     data = Column(Date)
     categoria = Column(String(255), nullable=False)
-    fk_paciente = Column(Integer, ForeignKey("pacientes.numeroSUS"), nullable=False)
+    fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False)
     fk_consulta = Column(Integer, ForeignKey("consultas.id"), nullable=False)
 
     paciente = relationship("PacienteModel", back_populates="estratificacoes")

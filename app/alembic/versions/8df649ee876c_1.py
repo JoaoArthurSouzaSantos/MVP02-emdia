@@ -1,8 +1,8 @@
 """1
 
-Revision ID: 4772d3f732d8
+Revision ID: 8df649ee876c
 Revises: 
-Create Date: 2025-03-19 09:35:34.484492
+Create Date: 2025-03-19 11:24:53.979819
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '4772d3f732d8'
+revision: str = '8df649ee876c'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -82,8 +82,9 @@ def upgrade() -> None:
     op.create_index(op.f('ix_funcionarios_id_perfil'), 'funcionarios', ['id_perfil'], unique=False)
     op.create_index(op.f('ix_funcionarios_nome'), 'funcionarios', ['nome'], unique=True)
     op.create_table('pacientes',
-    sa.Column('numeroSUS', sa.Integer(), nullable=False),
+    sa.Column('numeroSUS', sa.String(length=255), nullable=False),
     sa.Column('data_nascimento', sa.Date(), nullable=True),
+    sa.Column('cpf', sa.String(length=255), nullable=True),
     sa.Column('sexo', sa.String(length=255), nullable=True),
     sa.Column('info', sa.String(length=255), nullable=True),
     sa.Column('telefone', sa.String(length=255), nullable=True),
@@ -93,6 +94,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['micro_regiao_id'], ['microregiao.id'], ),
     sa.PrimaryKeyConstraint('numeroSUS')
     )
+    op.create_index(op.f('ix_pacientes_cpf'), 'pacientes', ['cpf'], unique=False)
     op.create_index(op.f('ix_pacientes_email'), 'pacientes', ['email'], unique=False)
     op.create_index(op.f('ix_pacientes_info'), 'pacientes', ['info'], unique=False)
     op.create_index(op.f('ix_pacientes_nome'), 'pacientes', ['nome'], unique=False)
@@ -112,7 +114,7 @@ def upgrade() -> None:
     op.create_index(op.f('ix_perfilpermissoes_id_permissao'), 'perfilpermissoes', ['id_permissao'], unique=False)
     op.create_table('consultas',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_especialidade', sa.Integer(), nullable=False),
     sa.Column('fk_funcionario', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_especialidade'], ['especialidades.id'], ),
@@ -144,7 +146,7 @@ def upgrade() -> None:
     op.create_table('paciente_patologias',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('fk_patologia', sa.Integer(), nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
     sa.ForeignKeyConstraint(['fk_patologia'], ['patologia.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -157,7 +159,7 @@ def upgrade() -> None:
     sa.Column('altura', sa.Float(), nullable=False),
     sa.Column('data', sa.Date(), nullable=False),
     sa.Column('cintura', sa.Float(), nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_consulta', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_consulta'], ['consultas.id'], ),
     sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
@@ -168,7 +170,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('data', sa.Date(), nullable=True),
     sa.Column('categoria', sa.String(length=255), nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_consulta', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_consulta'], ['consultas.id'], ),
     sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
@@ -179,7 +181,7 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('data_realizacao', sa.String(length=50), nullable=False),
     sa.Column('resultado', sa.String(length=500), nullable=True),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_tipo_exame', sa.Integer(), nullable=False),
     sa.Column('fk_consulta', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['fk_consulta'], ['consultas.id'], ),
@@ -200,7 +202,7 @@ def upgrade() -> None:
     sa.Column('pont_atv_fisica', sa.String(length=255), nullable=True),
     sa.Column('pont_ingestao_frutas_e_verduras', sa.String(length=255), nullable=True),
     sa.Column('pont_hipertensao', sa.String(length=255), nullable=True),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_consulta', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fk_consulta'], ['consultas.id'], ),
     sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
@@ -213,7 +215,7 @@ def upgrade() -> None:
     sa.Column('frequencia', sa.String(length=255), nullable=False),
     sa.Column('dosagem', sa.String(length=255), nullable=False),
     sa.Column('fk_tipo_medicamento', sa.Integer(), nullable=False),
-    sa.Column('fk_paciente', sa.Integer(), nullable=False),
+    sa.Column('fk_paciente', sa.String(length=255), nullable=False),
     sa.Column('fk_consulta', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['fk_consulta'], ['consultas.id'], ),
     sa.ForeignKeyConstraint(['fk_paciente'], ['pacientes.numeroSUS'], ),
@@ -255,6 +257,7 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_pacientes_nome'), table_name='pacientes')
     op.drop_index(op.f('ix_pacientes_info'), table_name='pacientes')
     op.drop_index(op.f('ix_pacientes_email'), table_name='pacientes')
+    op.drop_index(op.f('ix_pacientes_cpf'), table_name='pacientes')
     op.drop_table('pacientes')
     op.drop_index(op.f('ix_funcionarios_nome'), table_name='funcionarios')
     op.drop_index(op.f('ix_funcionarios_id_perfil'), table_name='funcionarios')
