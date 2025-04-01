@@ -26,8 +26,8 @@ VALUES (1, 'Ativo', 'Diária', '500mg', 1, 123456789);
 INSERT INTO especialidades (id, nome) VALUES (1, 'Cardiologia');
 
 -- Insert into consultas
-INSERT INTO consultas (id, fk_paciente, fk_especialidade, fk_funcionario)
-VALUES (1, 123456789, 1, 1);
+INSERT INTO consultas (id, fk_paciente, fk_especialidade, fk_funcionario, data, status, observacoes)
+VALUES (1, 123456789, 1, 1, '2023-10-05', 1, 'Consulta de teste');
 
 -- Insert into estratificacoes
 INSERT INTO estratificacoes (id, data, categoria, fk_paciente, fk_consulta)

@@ -163,6 +163,9 @@ class ConsultaModel(Base):
     fk_paciente = Column(String(255), ForeignKey("pacientes.numeroSUS"), nullable=False, index=True)
     fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
     fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
+    data = Column(Date, nullable=True)
+    status = Column(Integer, default=1, nullable=False)
+    observacoes = Column(String(255), nullable=True)
 
     paciente = relationship("PacienteModel", back_populates="consultas")
     especialidade = relationship("EspecialidadeModel", back_populates="consultas")
