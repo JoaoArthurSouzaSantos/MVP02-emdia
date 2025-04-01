@@ -10,7 +10,7 @@ class PacienteBase(BaseModel):
     telefone: str
     email: str
     nome: str
-    micro_regiao: str
+    micro_regiao_id: int
 
 class PacienteCreate(PacienteBase):
     pass
