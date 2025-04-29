@@ -85,6 +85,13 @@ def read_funcionario_me(token: str = Depends(oauth2_scheme), db: Session = Depen
     return funcionario
 
 
+# Rota para obter todos os funcionários
+@funcionario_router.get("/funcionarios/", response_model=list[FuncionarioOut])
+def get_all_funcionarios(db: Session = Depends(get_db_session)):
+    funcionarios = db.query(FuncionarioModel).all()
+    return funcionarios
+
+
 # Rota para editar um funcionário
 @funcionario_router.put("/funcionarios/{funcionario_id}", response_model=FuncionarioOut)
 def update_funcionario(funcionario_id: int, funcionario: FuncionarioUpdate, db: Session = Depends(get_db_session)):

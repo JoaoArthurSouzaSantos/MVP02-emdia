@@ -40,6 +40,7 @@ class FuncionarioModel(Base):
     perfil = relationship("PerfilModel", back_populates="funcionarios")
     logs = relationship("LogModel", back_populates="user")
     consultas = relationship("ConsultaModel", back_populates="funcionario")
+    especialidades = relationship("FuncionarioEspecialidadeModel", back_populates="funcionario", cascade="all, delete-orphan")
 
 
 class TipoExameModel(Base):
@@ -155,6 +156,7 @@ class EspecialidadeModel(Base):
     nome = Column(String(255), unique=True, nullable=False)
 
     consultas = relationship("ConsultaModel", back_populates="especialidade")
+    funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="especialidade", cascade="all, delete-orphan")
 
 
 class ConsultaModel(Base):
@@ -232,3 +234,13 @@ class LogModel(Base):
     metodo_http = Column(String(10), nullable=True)
 
     user = relationship("FuncionarioModel", back_populates="logs")
+
+
+class FuncionarioEspecialidadeModel(Base):
+    __tablename__ = "funcionario_especialidades"
+    id = Column(Integer, primary_key=True, index=True)
+    fk_funcionario = Column(Integer, ForeignKey("funcionarios.id"), nullable=False, index=True)
+    fk_especialidade = Column(Integer, ForeignKey("especialidades.id"), nullable=False, index=True)
+
+    funcionario = relationship("FuncionarioModel", back_populates="especialidades")
+    especialidade = relationship("EspecialidadeModel", back_populates="funcionarios")

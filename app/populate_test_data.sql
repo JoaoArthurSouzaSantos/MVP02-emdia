@@ -62,3 +62,7 @@ INSERT INTO permissoes (id, name) VALUES (1, 'Acesso Completo');
 -- Insert into perfilpermissoes
 INSERT INTO perfilpermissoes (id, id_perfil, id_permissao)
 VALUES (1, 1, 1);
+
+-- Insert into funcionario_especialidades
+INSERT INTO funcionario_especialidades (id, fk_funcionario, fk_especialidade)
+VALUES (1, 1, 1);
