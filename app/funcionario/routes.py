@@ -5,8 +5,8 @@ from typing import Optional
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError
 from db.base import SessionLocal
-from db.models import FuncionarioModel
-from funcionario.schemas import FuncionarioCreate, FuncionarioOut, FuncionarioUpdate  # Importar o novo schema
+from db.models import FuncionarioModel, FuncionarioEspecialidadeModel
+from funcionario.schemas import FuncionarioCreate, FuncionarioOut, FuncionarioUpdate, FuncionarioEspecialidadeOut, FuncionarioEspecialidadeList
 from depends import get_db_session
 from funcionario.auth import AuthService
 
@@ -108,6 +108,24 @@ def update_funcionario(funcionario_id: int, funcionario: FuncionarioUpdate, db: 
     db.commit()
     db.refresh(db_funcionario)
     return db_funcionario
+
+
+# Rota para obter todas as especialidades de funcionários
+@funcionario_router.get("/funcionario_especialidades/", response_model=FuncionarioEspecialidadeList)
+def get_all_funcionario_especialidades(db: Session = Depends(get_db_session)):
+    funcionario_especialidades = db.query(FuncionarioEspecialidadeModel).all()
+    return {"funcionario_especialidades": funcionario_especialidades}
+
+
+# Rota para obter especialidades de um funcionário pelo ID
+@funcionario_router.get("/funcionario_especialidades/{funcionario_id}", response_model=FuncionarioEspecialidadeList)
+def get_funcionario_especialidades_by_id(funcionario_id: int, db: Session = Depends(get_db_session)):
+    funcionario_especialidades = db.query(FuncionarioEspecialidadeModel).filter(
+        FuncionarioEspecialidadeModel.fk_funcionario == funcionario_id
+    ).all()
+    if not funcionario_especialidades:
+        raise HTTPException(status_code=404, detail="Especialidades não encontradas para o funcionário")
+    return {"funcionario_especialidades": funcionario_especialidades}
 
 
 # Rota de teste

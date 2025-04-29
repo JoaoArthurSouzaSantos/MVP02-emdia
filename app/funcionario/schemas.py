@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class FuncionarioBase(BaseModel):
@@ -26,3 +26,20 @@ class FuncionarioUpdate(BaseModel):
     email: Optional[str] = None
     id_perfil: Optional[int] = None
     password: Optional[str] = None
+
+
+class FuncionarioEspecialidadeBase(BaseModel):
+    fk_funcionario: int
+    fk_especialidade: int
+
+class FuncionarioEspecialidadeOut(FuncionarioEspecialidadeBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class FuncionarioEspecialidadeList(BaseModel):
+    funcionario_especialidades: List[FuncionarioEspecialidadeOut]
+
+    class Config:
+        orm_mode = True
