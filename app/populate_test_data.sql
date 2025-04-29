@@ -10,7 +10,7 @@ INSERT INTO perfis (id, name) VALUES (1, 'Administrador');
 
 -- Insert into funcionarios
 INSERT INTO funcionarios (id, cpf, password, nome, email, id_perfil)
-VALUES (1, '12345678900', 'senha123', 'Funcionario Teste', 'funcionario@teste.com', 1);
+VALUES (1, '12345678900', '$2b$12$dzj7I3Jv7op/hwAqWLm4YOOnP2sViExA3WZsD.4ZPK7bkNoLZQYBy', 'Funcionario Teste', 'funcionario@teste.com', 1);
 
 -- Insert into tipos_exames
 INSERT INTO tipos_exames (id, nome, status) VALUES (1, 'Exame de Sangue', TRUE);

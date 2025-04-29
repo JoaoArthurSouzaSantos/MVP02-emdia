@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .schemas import ConsultaSchema  # Supondo que você tenha um schema de Consulta
-from db.models import ConsultaModel  # Supondo que você tenha o model de Consulta
-from depends import get_db_session  # Função de dependência para obter a sessão do DB
+from .schemas import ConsultaSchema  
+from db.models import ConsultaModel , PacienteModel, BiometriaModel, FindriskModel, ExameModel
+from depends import get_db_session  
 
 consulta_router = APIRouter()
 
@@ -45,3 +45,62 @@ def delete_consulta(id: int, db_session: Session = Depends(get_db_session)):
     db_session.delete(consulta_model)
     db_session.commit()
     return JSONResponse(content={'msg': 'Consulta deleted successfully'}, status_code=status.HTTP_200_OK)
+
+@consulta_router.get('/consultaNumeroSUS/{numeroSusPaciente}')
+def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(get_db_session)):
+    paciente = db_session.query(PacienteModel).filter(PacienteModel.numeroSUS == numeroSusPaciente).first()
+    if not paciente:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Paciente not found")
+
+    # Fetch last biometria
+    last_biometria = (
+        db_session.query(BiometriaModel)
+        .filter(BiometriaModel.fk_paciente == numeroSusPaciente)
+        .order_by(BiometriaModel.data.desc())
+        .first()
+    )
+
+    # Fetch last findrisk
+    last_findrisk = (
+        db_session.query(FindriskModel)
+        .filter(FindriskModel.fk_paciente == numeroSusPaciente)
+        .order_by(FindriskModel.data.desc())
+        .first()
+    )
+
+    # Fetch patologias
+    patologias = [p.patologia.nome for p in paciente.patologias]
+
+    # Fetch last exam results
+    last_exames = (
+        db_session.query(ExameModel)
+        .filter(ExameModel.fk_paciente == numeroSusPaciente)
+        .order_by(ExameModel.data_realizacao.desc())
+        .all()
+    )
+
+    hemoglobina_glicada = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Hemoglobina Glicada"), None)
+    glicemia_em_jejum = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Glicemia em Jejum"), None)
+
+    response = {
+        "nome": paciente.nome,
+        "data_nascimento": paciente.data_nascimento,
+        "sexo": paciente.sexo,
+        "micro_regiao": paciente.micro_regiao.nome if paciente.micro_regiao else None,
+        "info": paciente.info,
+        "patologia": patologias,
+        "data": last_biometria.data if last_biometria else None,
+        "peso": last_biometria.peso if last_biometria else None,
+        "altura": last_biometria.altura if last_biometria else None,
+        "imc": last_biometria.imc if last_biometria else None,
+        "cintura": last_biometria.cintura if last_biometria else None,
+        "nivelDeRisco": last_findrisk.classificacao if last_findrisk else None,
+        "pontuacaoDoUltimoFindrisc": last_findrisk.pont_idade if last_findrisk else None,
+        "dataDoUltimoFindrisc": last_findrisk.data if last_findrisk else None,
+        "ultimoResultadoExame": {
+            "HemoglobinaGlicada": hemoglobina_glicada,
+            "GlicemiaEmJejum": glicemia_em_jejum,
+        },
+    }
+
+    return response
