@@ -73,4 +73,49 @@ def delete_paciente(numeroSUS: str, db: Session = Depends(get_db_session)):
     HTTPException(200)
     return {"detail": "Paciente deleted"}
 
+@paciente_router.get("/pacientes/full-data/{numeroSUS}")
+def get_full_data(numeroSUS: str, db: Session = Depends(get_db_session)):
+    paciente = db.query(models.PacienteModel).filter(models.PacienteModel.numeroSUS == numeroSUS).first()
+    if not paciente:
+        raise HTTPException(status_code=404, detail="Paciente not found")
+    return {
+        "paciente": {
+            "numeroSUS": paciente.numeroSUS,
+            "nome": paciente.nome,
+            "email": paciente.email,
+            "telefone": paciente.telefone
+        },
+        "consultas": [
+            {
+                "id": c.id,
+                "data": c.data,
+                "status": c.status,
+                "observacoes": c.observacoes
+            } for c in paciente.consultas
+        ],
+        "medicamentos": [
+            {
+                "id": m.id,
+                "status": m.status,
+                "frequencia": m.frequencia,
+                "dosagem": m.dosagem
+            } for m in paciente.medicamentos
+        ],
+        "exames": [
+            {
+                "id": e.id,
+                "data_realizacao": e.data_realizacao,
+                "resultado": e.resultado
+            } for e in paciente.exames
+        ],
+        "findrisk": [
+            {
+                "id": f.id,
+                "data": f.data,
+                "classificacao": f.classificacao
+            } for f in paciente.findrisk
+        ],
+        "patologias": [p.patologia.nome for p in paciente.pathologias]
+    }
+
 
