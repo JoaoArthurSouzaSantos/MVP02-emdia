@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from .schemas import ConsultaSchema  
-from db.models import ConsultaModel , PacienteModel, BiometriaModel, FindriskModel, ExameModel
+from db.models import ConsultaModel, PacienteModel, BiometriaModel, FindriskModel, ExameModel
 from depends import get_db_session  
+from datetime import datetime
 
 consulta_router = APIRouter()
 
@@ -104,3 +105,25 @@ def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(ge
     }
 
     return response
+
+@consulta_router.get('/agenda')
+def get_agenda(
+    start_date: str,
+    end_date: str,
+    db_session: Session = Depends(get_db_session)
+):
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
+    consultas = db_session.query(ConsultaModel)\
+        .filter(ConsultaModel.data.between(start_date_obj, end_date_obj))\
+        .all()
+    agenda = []
+    for c in consultas:
+        agenda.append({
+            "data_consulta": c.data,
+            "nome_paciente": c.paciente.nome if c.paciente else None,
+            "nivel_de_risco": c.findrisk[0].classificacao if c.findrisk else None,
+            "medico": c.funcionario.nome if c.funcionario else None,
+            "especialidade": c.especialidade.nome if c.especialidade else None
+        })
+    return agenda
