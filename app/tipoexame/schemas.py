@@ -9,8 +9,9 @@ class TipoExameSchema(BaseModel):
 
 
 class TipoExameStatusSchema(BaseModel):
+    id: int  # ID do Tipo de Exame
     nome: str  # Nome do Tipo de Exame
 
     class Config:
         orm_mode = True
-        from_attributes = True  # Necessário para usar from_orm
+        from_attributes = True 
