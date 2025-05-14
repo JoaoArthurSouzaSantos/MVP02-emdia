@@ -86,6 +86,7 @@ class PatologiaModel(Base):
     __tablename__ = "patologia"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255))
+    icon = Column(Integer, nullable=False)
 
     paciente_patologias = relationship("PacientePatologia", back_populates="patologia")
 
