@@ -42,7 +42,7 @@ INSERT INTO logs (id, timestamp, usuario_id, ip_origem, acao, tabela_afetada, re
 VALUES (1, CURRENT_TIMESTAMP, 1, '127.0.0.1', 'Teste de Log', 'pacientes', 123456789, 'Log de teste', 'Sucesso', 'Sistema', 'POST');
 
 -- Insert into patologia
-INSERT INTO patologia (id, nome) VALUES (1, 'Diabetes Tipo 2');
+INSERT INTO patologia (id, nome , icon) VALUES (1, 'Diabetes Tipo 2' , 1);
 
 -- Insert into paciente_patologias
 INSERT INTO paciente_patologias (id, fk_patologia, fk_paciente)

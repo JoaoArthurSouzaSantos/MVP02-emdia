@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class PatologiaSchema(BaseModel):
-    id: int
     nome: str
+    icon: int
 
     class Config:
         orm_mode = True
