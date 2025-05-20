@@ -110,13 +110,16 @@ def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(ge
 def get_agenda(
     start_date: str,
     end_date: str,
+    status_id: int = None,
     db_session: Session = Depends(get_db_session)
 ):
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
     consultas = db_session.query(ConsultaModel)\
-        .filter(ConsultaModel.data.between(start_date_obj, end_date_obj))\
-        .all()
+        .filter(ConsultaModel.data.between(start_date_obj, end_date_obj))
+    if status_id is not None:
+        consultas = consultas.filter(ConsultaModel.status == status_id)
+    consultas = consultas.all()
     agenda = []
     for c in consultas:
         agenda.append({
