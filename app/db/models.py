@@ -103,11 +103,11 @@ class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(String(255), primary_key=True, index=True)
     data_nascimento = Column(Date)
-    cpf = Column(String(255), index=True)
+    cpf = Column(String(255), unique=True, index=True)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     telefone = Column(String(255), index=True)
-    email = Column(String(255), index=True)
+    email = Column(String(255), unique=True, index=True)
     nome = Column(String(255), index=True)
     micro_regiao_id = Column(Integer, ForeignKey("microregiao.id"))
     
