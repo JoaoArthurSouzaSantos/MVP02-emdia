@@ -12,3 +12,15 @@ class ConsultaSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ConsultaReturnSchema(ConsultaSchema):
+    id: int
+    data: date
+    status: int
+    observacoes: str
+    fk_paciente: int
+    fk_especialidade: int
+    fk_funcionario: int
+
+    class Config:
+        orm_mode = True

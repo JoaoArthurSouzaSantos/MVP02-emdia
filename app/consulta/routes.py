@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .schemas import ConsultaSchema  
+from .schemas import ConsultaSchema, ConsultaReturnSchema  
 from db.models import ConsultaModel, PacienteModel, BiometriaModel, FindriskModel, ExameModel
 from depends import get_db_session  
 from datetime import datetime
 
 consulta_router = APIRouter()
 
-@consulta_router.post('/consultas', response_model=ConsultaSchema)
+@consulta_router.post('/consultas', response_model=ConsultaReturnSchema)
 def create_consulta(consulta: ConsultaSchema, db_session: Session = Depends(get_db_session)):
     consulta_model = ConsultaModel(**consulta.dict())
     db_session.add(consulta_model)
