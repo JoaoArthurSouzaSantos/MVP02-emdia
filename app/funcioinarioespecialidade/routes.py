@@ -4,6 +4,7 @@ from db.models import FuncionarioEspecialidadeModel
 from .schemas import FuncionarioEspecialidadeBase, FuncionarioEspecialidadeOut
 from depends import get_db_session
 
+
 funcionario_especialidade_router = APIRouter()
 
 # Create
