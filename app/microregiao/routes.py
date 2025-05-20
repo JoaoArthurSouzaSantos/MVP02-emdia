@@ -4,6 +4,7 @@ from .schemas import MicroRegiaoSchema, MicroRegiaoGetSchema
 from depends import get_db_session
 from db.models import MicroRegiaoModel
 from sqlalchemy.orm import Session
+from typing import List
 
 microregiao_router = APIRouter()
 
@@ -50,3 +51,7 @@ def delete_microregiao(id: int, db_session: Session = Depends(get_db_session)): 
     db_session.delete(microregiao_model)
     db_session.commit()
     return JSONResponse(content={'msg': 'Micro Região deleted successfully'}, status_code=200)
+
+@microregiao_router.get("/microregiao/read_microregioes", response_model=List[MicroRegiaoGetSchema])
+def get_all_microregioes(db_session: Session = Depends(get_db_session)):
+    return db_session.query(MicroRegiaoModel).all()
