@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from .schemas import ConsultaSchema, ConsultaReturnSchema  
+from .schemas import ConsultaSchema, ConsultaReturnSchema, AgendaItemSchema  
 from db.models import ConsultaModel, PacienteModel, BiometriaModel, FindriskModel, ExameModel
 from depends import get_db_session  
 from datetime import datetime
@@ -83,21 +83,25 @@ def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(ge
     hemoglobina_glicada = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Hemoglobina Glicada"), None)
     glicemia_em_jejum = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Glicemia em Jejum"), None)
 
+    data_nascimento = paciente.data_nascimento.strftime('%d/%m/%Y') if paciente.data_nascimento else None
+    data_biometria = last_biometria.data.strftime('%d/%m/%Y') if last_biometria and last_biometria.data else None
+    data_findrisk = last_findrisk.data.strftime('%d/%m/%Y') if last_findrisk and last_findrisk.data else None
+
     response = {
         "nome": paciente.nome,
-        "data_nascimento": paciente.data_nascimento,
+        "data_nascimento": data_nascimento,
         "sexo": paciente.sexo,
         "micro_regiao": paciente.micro_regiao.nome if paciente.micro_regiao else None,
         "info": paciente.info,
         "patologia": patologias,
-        "data": last_biometria.data if last_biometria else None,
+        "data": data_biometria,
         "peso": last_biometria.peso if last_biometria else None,
         "altura": last_biometria.altura if last_biometria else None,
         "imc": last_biometria.imc if last_biometria else None,
         "cintura": last_biometria.cintura if last_biometria else None,
         "nivelDeRisco": last_findrisk.classificacao if last_findrisk else None,
         "pontuacaoDoUltimoFindrisc": last_findrisk.pont_idade if last_findrisk else None,
-        "dataDoUltimoFindrisc": last_findrisk.data if last_findrisk else None,
+        "dataDoUltimoFindrisc": data_findrisk,
         "ultimoResultadoExame": {
             "HemoglobinaGlicada": hemoglobina_glicada,
             "GlicemiaEmJejum": glicemia_em_jejum,
@@ -107,12 +111,7 @@ def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(ge
     return response
 
 @consulta_router.get('/agenda')
-def get_agenda(
-    start_date: str,
-    end_date: str,
-    status_id: int = None,
-    db_session: Session = Depends(get_db_session)
-):
+def get_agenda(start_date: str, end_date: str, status_id: int = None, db_session: Session = Depends(get_db_session)):
     start_date_obj = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date_obj = datetime.strptime(end_date, '%Y-%m-%d').date()
     consultas = db_session.query(ConsultaModel)\
@@ -120,13 +119,13 @@ def get_agenda(
     if status_id is not None:
         consultas = consultas.filter(ConsultaModel.status == status_id)
     consultas = consultas.all()
-    agenda = []
+    agenda_data = []
     for c in consultas:
-        agenda.append({
+        agenda_data.append({
             "data_consulta": c.data,
             "nome_paciente": c.paciente.nome if c.paciente else None,
             "nivel_de_risco": c.findrisk[0].classificacao if c.findrisk else None,
             "medico": c.funcionario.nome if c.funcionario else None,
             "especialidade": c.especialidade.nome if c.especialidade else None
         })
-    return agenda
+    return [AgendaItemSchema(**item) for item in agenda_data]
