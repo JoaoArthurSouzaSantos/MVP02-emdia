@@ -1,3 +1,9 @@
+# Alembic revision identifiers
+revision = '7277826737fb'
+down_revision = '9174e901c008'
+branch_labels = None
+depends_on = None
+
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy import Integer, String, Boolean, Date, Float, Text, DateTime
