@@ -52,9 +52,6 @@ class AgendaItemSchema(BaseModel):
     medico: Optional[str]
     especialidade: Optional[str]
 
-    @validator('data_consulta', pre=True, always=True)
-    def format_date_consulta(cls, value):
-        return value.strftime('%d/%m/%Y') if value else None
 
     class Config:
         orm_mode = True
