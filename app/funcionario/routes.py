@@ -125,6 +125,9 @@ def get_funcionario_especialidades_by_id(funcionario_id: int, db: Session = Depe
     ).all()
     if not funcionario_especialidades:
         raise HTTPException(status_code=404, detail="Especialidades não encontradas para o funcionário")
+    
+    for fe in funcionario_especialidades:
+        fe.nome_especialidade = fe.especialidade.nome
     return {"funcionario_especialidades": funcionario_especialidades}
 
 
