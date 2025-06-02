@@ -2,3 +2,15 @@ pull_saver/
 *.txt
 app/alembic.ini
 
+# Virtual Environment
+venv/
+env/
+.env/
+.venv/
+ENV/
+virtualenv/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+

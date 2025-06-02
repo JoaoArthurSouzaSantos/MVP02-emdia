@@ -83,9 +83,9 @@ def consulta_numero_sus(numeroSusPaciente: str, db_session: Session = Depends(ge
     hemoglobina_glicada = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Hemoglobina Glicada"), None)
     glicemia_em_jejum = next((e.resultado for e in last_exames if e.tipo_exame.nome == "Glicemia em Jejum"), None)
 
-    data_nascimento = paciente.data_nascimento.strftime('%d/%m/%Y') if paciente.data_nascimento else None
-    data_biometria = last_biometria.data.strftime('%d/%m/%Y') if last_biometria and last_biometria.data else None
-    data_findrisk = last_findrisk.data.strftime('%d/%m/%Y') if last_findrisk and last_findrisk.data else None
+    data_nascimento = paciente.data_nascimento.strftime('%Y-%m-%d') if paciente.data_nascimento else None
+    data_biometria = last_biometria.data.strftime('%Y-%m-%d') if last_biometria and last_biometria.data else None
+    data_findrisk = last_findrisk.data.strftime('%Y-%m-%d') if last_findrisk and last_findrisk.data else None
 
     response = {
         "nome": paciente.nome,
