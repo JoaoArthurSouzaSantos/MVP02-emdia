@@ -115,7 +115,7 @@ def get_full_data(numeroSUS: str, db: Session = Depends(get_db_session)):
                 "classificacao": f.classificacao
             } for f in paciente.findrisk
         ],
-        "patologias": [p.patologia.nome for p in paciente.pathologias]
+        "patologias": [p.patologia.nome for p in paciente.patologias]
     }
 
 
