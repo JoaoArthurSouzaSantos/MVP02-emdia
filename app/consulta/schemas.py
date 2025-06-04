@@ -6,7 +6,7 @@ class ConsultaSchema(BaseModel):
     data: date
     status: int
     observacoes: str
-    fk_paciente: int
+    fk_paciente: str
     fk_especialidade: int
     fk_funcionario: int
 
@@ -18,7 +18,7 @@ class ConsultaReturnSchema(ConsultaSchema):
     data: date
     status: int
     observacoes: str
-    fk_paciente: int
+    fk_paciente: str
     fk_especialidade: int
     fk_funcionario: int
 
