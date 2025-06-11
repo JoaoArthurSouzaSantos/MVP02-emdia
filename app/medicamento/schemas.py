@@ -3,7 +3,6 @@ from datetime import date
 from typing import Optional
 
 class MedicamentoSchema(BaseModel):
-    id: int
     status: str
     frequencia: str
     dosagem: str

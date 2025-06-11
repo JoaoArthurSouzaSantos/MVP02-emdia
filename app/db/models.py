@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime, Boolean
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, Date, DateTime, Boolean, event, text
 from sqlalchemy.orm import relationship
 from db.base import Base
 from datetime import datetime
@@ -86,7 +86,7 @@ class PatologiaModel(Base):
     __tablename__ = "patologia"
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255))
-    icon = Column(Integer, nullable=False)
+    icon = Column(Integer)
 
     paciente_patologias = relationship("PacientePatologia", back_populates="patologia")
 
@@ -103,11 +103,11 @@ class PacienteModel(Base):
     __tablename__ = "pacientes"
     numeroSUS = Column(String(255), primary_key=True, index=True)
     data_nascimento = Column(Date)
-    cpf = Column(String(255), unique=True, index=True)
+    cpf = Column(String(255), index=True)
     sexo = Column(String(255), index=True)
     info = Column(String(255), index=True)
     telefone = Column(String(255), index=True)
-    email = Column(String(255), unique=True, index=True)
+    email = Column(String(255), index=True)
     nome = Column(String(255), index=True)
     micro_regiao_id = Column(Integer, ForeignKey("microregiao.id"))
     
@@ -156,7 +156,7 @@ class EspecialidadeModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(255), unique=True, nullable=False)
 
-    consultas = relationship("ConsultaModel", back_populates="especialidade")
+    consultas = relationship("ConsultaModel", back_populates="consultas")
     funcionarios = relationship("FuncionarioEspecialidadeModel", back_populates="especialidade", cascade="all, delete-orphan")
 
 
@@ -245,3 +245,5 @@ class FuncionarioEspecialidadeModel(Base):
 
     funcionario = relationship("FuncionarioModel", back_populates="especialidades")
     especialidade = relationship("EspecialidadeModel", back_populates="funcionarios")
+
+

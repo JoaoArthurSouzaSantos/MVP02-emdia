@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from datetime import date
 
 class ExameSchema(BaseModel):
-    id: int
     data_realizacao: date
     resultado: str
     fk_paciente: int
@@ -11,3 +10,5 @@ class ExameSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
