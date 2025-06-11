@@ -78,13 +78,39 @@ def get_full_data(numeroSUS: str, db: Session = Depends(get_db_session)):
     paciente = db.query(models.PacienteModel).filter(models.PacienteModel.numeroSUS == numeroSUS).first()
     if not paciente:
         raise HTTPException(status_code=404, detail="Paciente not found")
+    hemoglobina_glicada = next(
+        (e.resultado for e in paciente.exames if e.tipo_exame.nome == "Hemoglobina Glicada"), None
+    )
+    glicemia_jejum = next(
+        (e.resultado for e in paciente.exames if e.tipo_exame.nome == "Glicemia em Jejum"), None
+    )
+    last_findrisk = paciente.findrisk[-1] if paciente.findrisk else None
+
     return {
         "paciente": {
             "numeroSUS": paciente.numeroSUS,
             "nome": paciente.nome,
             "email": paciente.email,
-            "telefone": paciente.telefone
+            "telefone": paciente.telefone,
+            "data_nascimento": paciente.data_nascimento,
+            "sexo": paciente.sexo,
+            "cpf": paciente.cpf,
+            "micro_regiao": {
+                "id": paciente.micro_regiao_id,
+                "nome": paciente.micro_regiao.nome if paciente.micro_regiao else None
+            },
         },
+        "biometrias": [
+            {
+                "id": b.id,
+                "data": b.data,
+                "peso": b.peso,
+                "altura": b.altura,
+                "imc": b.imc,
+                "cintura": b.cintura
+            }
+            for b in paciente.biometrias
+        ],
         "consultas": [
             {
                 "id": c.id,
@@ -98,24 +124,42 @@ def get_full_data(numeroSUS: str, db: Session = Depends(get_db_session)):
                 "id": m.id,
                 "status": m.status,
                 "frequencia": m.frequencia,
-                "dosagem": m.dosagem
+                "dosagem": m.dosagem,
+                "nome_medicamento": m.tipo_medicamento.nome if m.tipo_medicamento else None
             } for m in paciente.medicamentos
         ],
         "exames": [
             {
                 "id": e.id,
                 "data_realizacao": e.data_realizacao,
-                "resultado": e.resultado
+                "resultado": e.resultado,
+                "nome_exame": e.tipo_exame.nome
             } for e in paciente.exames
         ],
         "findrisk": [
             {
                 "id": f.id,
                 "data": f.data,
-                "classificacao": f.classificacao
+                "classificacao": f.classificacao,
+                "pont_historico_familiar_de_diabetes": f.pont_historico_familiar_de_diabetes,
+                "pont_historico_de_glicemia_elevada": f.pont_historico_de_glicemia_elevada,
+                "pont_idade": f.pont_idade,
+                "pont_imc": f.pont_imc,
+                "pont_circunferencia_cintura": f.pont_circunferencia_cintura,
+                "pont_atv_fisica": f.pont_atv_fisica,
+                "pont_ingestao_frutas_e_verduras": f.pont_ingestao_frutas_e_verduras,
+                "pont_hipertensao": f.pont_hipertensao
             } for f in paciente.findrisk
         ],
-        "patologias": [p.patologia.nome for p in paciente.patologias]
+        "patologias": [
+            {
+                "nome": p.patologia.nome,
+                "icon": p.patologia.icon
+            } for p in paciente.patologias
+        ],
+        "nivelDeRisco": last_findrisk.classificacao if last_findrisk else None,
+        "hemoglobinaGlicada": hemoglobina_glicada,
+        "glicemiaJejum": glicemia_jejum
     }
 
 
