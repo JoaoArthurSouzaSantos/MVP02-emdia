@@ -34,6 +34,7 @@ class FuncionarioEspecialidadeBase(BaseModel):
 
 class FuncionarioEspecialidadeOut(FuncionarioEspecialidadeBase):
     id: int
+    nome_especialidade: Optional[str] = None
 
     class Config:
         orm_mode = True
