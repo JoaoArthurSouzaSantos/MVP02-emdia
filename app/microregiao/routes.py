@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from .schemas import MicroRegiaoSchema, MicroRegiaoGetSchema
+from .schemas import MicroRegiaoSchema
 from depends import get_db_session
 from db.models import MicroRegiaoModel
 from sqlalchemy.orm import Session
@@ -8,7 +8,7 @@ from typing import List
 
 microregiao_router = APIRouter()
 
-@microregiao_router.get("/microregiao/read_microregiao/{id}", response_model=MicroRegiaoGetSchema)
+@microregiao_router.get("/microregiao/read_microregiao/{id}", response_model=MicroRegiaoSchema)
 def get_microregiao(id: int, db_session: Session = Depends(get_db_session)):
     microregiao_in_db = db_session.query(MicroRegiaoModel).filter(MicroRegiaoModel.id == id).first()
 
@@ -52,6 +52,6 @@ def delete_microregiao(id: int, db_session: Session = Depends(get_db_session)): 
     db_session.commit()
     return JSONResponse(content={'msg': 'Micro Região deleted successfully'}, status_code=200)
 
-@microregiao_router.get("/microregiao/read_microregioes", response_model=List[MicroRegiaoGetSchema])
+@microregiao_router.get("/microregiao/read_microregioes", response_model=List[MicroRegiaoSchema])
 def get_all_microregioes(db_session: Session = Depends(get_db_session)):
     return db_session.query(MicroRegiaoModel).all()
